@@ -41,6 +41,17 @@ Phone cùng mạng/hotspot: `http://<IP-LAN>:8000/index.html`.
 4. URL đó đã điền sẵn trong `js/chat.js` → `CHAT_ENDPOINT`. Nếu URL khác → sửa 1 dòng đó.
 5. Colab tắt → chat tự rơi về FAQ local (trang không chết).
 
+## Backup AI — GLM 4.7 free qua Cloudflare Worker (khi Colab tắt)
+
+Chuỗi chat: `FAQ local → Colab Qwen (chính) → GLM worker (dự phòng) → báo lỗi nhẹ`.
+
+1. Tạo account Cloudflare (free) → cài wrangler: `npm i -g wrangler` → `wrangler login`
+2. `cd server/worker && wrangler deploy` → nhận URL `https://momo-glm-proxy.<subdomain>.workers.dev`
+3. `wrangler secret put GLM_API_KEY` → dán key GLM (z.ai hoặc bigmodel.cn — key KHÔNG vào code/git)
+   - Dùng bigmodel.cn thì thêm: `wrangler secret put GLM_BASE_URL` = `https://open.bigmodel.cn/api/paas/v4`
+   - Đổi model: `wrangler secret put GLM_MODEL` (default `glm-4.7-flash` — free)
+4. Điền URL worker vào `js/chat.js` → `BACKUP_ENDPOINT`
+
 ## Bake lại 3D (khi đổi model/style)
 
 1. Upload `abc.glb` + `123.glb` + `server/bake/*.py` vào `MyDrive/momo/`
