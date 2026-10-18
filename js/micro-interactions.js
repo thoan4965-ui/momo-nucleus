@@ -66,9 +66,10 @@
           gsap.fromTo(s, { scale: 0, opacity: 1, x: 0, y: 0 }, { scale: 1.2, opacity: 0, x: (Math.random() - 0.5) * 40, y: -25 - Math.random() * 25, duration: 0.9, ease: 'power2.out', onComplete: function () { s.remove(); } });
         });
       }
+      var coarsePointer = window.matchMedia && window.matchMedia('(pointer: coarse)').matches;
       document.querySelectorAll('.mode-btn, .sw, .locus-item, .buy, .badge, .back-to-top, .fn-chip, .fs-btn, .ai-submit, .ai-prompt-chip').forEach(function (el) {
         attachRipple(el);
-        attachSparkle(el);
+        if (!coarsePointer) attachSparkle(el);
       });
     }
     if (document.readyState === 'complete') init();
