@@ -7,7 +7,7 @@
   var CHAT_ENDPOINT = 'https://demanding-harddisk-hatbox.ngrok-free.dev'; // dev domain co dinh (P6)
   var MODEL = 'qwen2.5:7b';
   var REMOTE_TIMEOUT_MS = 60000;
-  var SYSTEM_PROMPT = 'Bạn là trợ lý học tập của trang "Nucleus — Nhiễm sắc thể" cho học sinh lớp 12 (chương trình Việt Nam). LĨNH VỰC GỐC: sinh học — nhiễm sắc thể, nguyên phân, giảm phân, đột biến NST, gen - DNA, di truyền học; câu hỏi thuộc lĩnh vực này phải trả lời chính xác, bám sát kiến thức phổ thông. MỞ RỘNG: bạn được phép trả lời cả câu hỏi ngoài môn sinh (toán, lý, hóa, tin học, văn, kỹ năng học tập, đời sống...) một cách thân thiện và hữu ích; khi có thể hãy liên hệ về góc nhìn sinh học làm nền tảng, nhưng đừng gượng ép nếu không liên quan. QUY TẮC NGÔN NGỮ (bắt buộc): 1) Luôn trả lời 100% bằng tiếng Việt có dấu. 2) TUYỆT ĐỐI không viết chữ Hán hoặc tiếng Trung, dù chỉ một ký tự. 3) Không trả lời bằng tiếng Anh — chỉ giữ nguyên viết tắt khoa học phổ biến (DNA, NST, RNA). Trả lời ngắn gọn, chính xác, dễ hiểu, phù hợp học sinh lớp 12. Nếu không chắc chắn, nói rõ là không chắc chắn.';
+  var SYSTEM_PROMPT = 'Bạn là trợ lý học tập của trang "Nucleus — Nhiễm sắc thể" cho học sinh lớp 12 (chương trình Việt Nam). LĨNH VỰC GỐC: sinh học — nhiễm sắc thể, nguyên phân, giảm phân, đột biến NST, gen - DNA, di truyền học; câu hỏi thuộc lĩnh vực này phải trả lời chính xác, bám sát kiến thức phổ thông. MỞ RỘNG (quan trọng): với câu hỏi ngoài môn sinh (toán, lý, hóa, tin học, văn, kỹ năng học tập, đời sống...), KHÔNG được xin lỗi, KHÔNG được từ chối, KHÔNG được nói câu hỏi không thuộc sinh học — hãy trả lời trực tiếp, đầy đủ, thân thiện như một gia sư đa môn; khi thấy tự nhiên hãy liên hệ nhẹ về góc nhìn sinh học, nhưng đừng gượng ép. QUY TẮC NGÔN NGỮ (bắt buộc): 1) Luôn trả lời 100% bằng tiếng Việt có dấu. 2) TUYỆT ĐỐI không viết chữ Hán hoặc tiếng Trung, dù chỉ một ký tự — nếu sắp viết ký tự tiếng Trung hãy dừng lại và viết lại bằng tiếng Việt. 3) Không trả lời bằng tiếng Anh — chỉ giữ nguyên viết tắt khoa học phổ biến (DNA, NST, RNA). Trả lời ngắn gọn, chính xác, dễ hiểu, phù hợp học sinh lớp 12. Nếu không chắc chắn, nói rõ là không chắc chắn.';
   var FALLBACK_TEXT = 'Câu hỏi của bạn khá thú vị! Tuy nhiên, kho dữ liệu của tôi hiện tại chưa có câu trả lời chính xác cho vấn đề này. Bạn có thể thử hỏi về các chủ đề như: Nguyên phân, Giảm phân, Cấu trúc NST, Trao đổi chéo, Đột biến NST, hoặc click vào các gợi ý câu hỏi phía trên nhé!';
   var REMOTE_ERROR_TEXT = 'AI đang tạm không kết nối được — bạn thử lại sau nhé. Trong lúc đó, bạn có thể hỏi về: Nguyên phân, Giảm phân, Cấu trúc NST, Đột biến NST, Gen và DNA.';
 
@@ -66,21 +66,29 @@
     if (indicator) indicator.remove();
   }
 
-  // Goi backend Ollama (OpenAI-style /api/chat) — chi khi co CHAT_ENDPOINT
-  function askRemote(text) {
+  function hasCJK(s) {
+    return /[\u4e00-\u9fff\u3400-\u4dbf\u3040-\u30ff]/.test(s || '');
+  }
+  function stripCJK(s) {
+    return (s || '').replace(/[\u4e00-\u9fff\u3400-\u4dbf\u3040-\u30ff]+/g, ' ')
+      .replace(/\s{2,}/g, ' ').trim();
+  }
+
+  // Goi backend Ollama — tra ve Promise<string> noi dung
+  function callModel(text, extraNote) {
     var ctrl = ('AbortController' in window) ? new AbortController() : null;
     var timer = setTimeout(function () { if (ctrl) ctrl.abort(); }, REMOTE_TIMEOUT_MS);
+    var msgs = [{ role: 'system', content: SYSTEM_PROMPT }];
+    if (extraNote) msgs.push({ role: 'system', content: extraNote });
+    msgs.push({ role: 'user', content: text + '\n\n(Trả lời bằng tiếng Việt có dấu. Không dùng chữ Hán.)' });
 
-    fetch(CHAT_ENDPOINT + '/api/chat', {
+    return fetch(CHAT_ENDPOINT + '/api/chat', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         model: MODEL,
         stream: false,
-        messages: [
-          { role: 'system', content: SYSTEM_PROMPT },
-          { role: 'user', content: text + '\n\n(Trả lời bằng tiếng Việt có dấu. Không dùng chữ Hán.)' }
-        ],
+        messages: msgs,
         options: { temperature: 0.4, num_predict: 500 }
       }),
       signal: ctrl ? ctrl.signal : undefined
@@ -89,14 +97,29 @@
       return r.json();
     }).then(function (data) {
       clearTimeout(timer);
-      removeTypingIndicator();
-      var reply = (data && data.message && data.message.content) ? data.message.content.trim() : '';
-      addMessage(reply || REMOTE_ERROR_TEXT, 'ai');
-    }).catch(function () {
-      clearTimeout(timer);
-      removeTypingIndicator();
-      addMessage(REMOTE_ERROR_TEXT, 'ai');
+      return (data && data.message && data.message.content) ? data.message.content.trim() : '';
     });
+  }
+
+  var CJK_RETRY_NOTE = 'Lần trả lời trước bị lẫn chữ Hán/tiếng Trung. Viết lại HOÀN TOÀN bằng tiếng Việt có dấu; TUYỆT ĐỐI không một ký tự Hán.';
+
+  function askRemote(text) {
+    callModel(text, null)
+      .then(function (a) {
+        if (a && !hasCJK(a)) return a;
+        // Retry 1 lan voi loi nhac manh; van dinh thi loc sach chu Han
+        return callModel(text, CJK_RETRY_NOTE)
+          .then(function (b) { return hasCJK(b) ? stripCJK(b) : b; })
+          .catch(function () { return stripCJK(a); });
+      })
+      .then(function (final) {
+        removeTypingIndicator();
+        addMessage(final || REMOTE_ERROR_TEXT, 'ai');
+      })
+      .catch(function () {
+        removeTypingIndicator();
+        addMessage(REMOTE_ERROR_TEXT, 'ai');
+      });
   }
 
   if (aiForm) {
