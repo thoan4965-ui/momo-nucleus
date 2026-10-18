@@ -504,11 +504,11 @@
     }
 
     var FEATURE_INFO = {
-      gene:       { name: 'Gene',       text: 'Đơn vị cấu trúc cơ bản của di truyền. Mỗi gene mã hóa cho một sản phẩm protein hoặc RNA chức năng cụ thể.' },
-      locus:      { name: 'Locus',      text: 'Vị trí xác định của một gene trên NST. Các allele khác nhau của cùng một gene nằm tại cùng một locus.' },
-      allele:     { name: 'Allele',     text: 'Các biến thể khác nhau của cùng một gene. Mỗi locus trên cặp NST tương đồng có thể chứa hai allele khác nguồn gốc.' },
-      centromere: { name: 'Centromere', text: 'Tâm động — nơi hai chromatid chị em dính nhau và là điểm bám của sợi tơ vô sắc trong phân bào.' },
-      telomere:   { name: 'Telomere',   text: 'Đầu mút NST — vùng trình tự lặp bảo vệ NST khỏi bị phân hủy và ngăn mất thông tin di truyền.' }
+      gene:       { name: 'Gene',     text: 'Một đoạn ADN mang thông tin mã hoá một sản phẩm (protein hoặc ARN). Khi ADN duỗi xoắn, gene nằm dọc theo chiều dài phân tử.' },
+      locus:      { name: 'Locus',    text: 'Vị trí xác định của một gene trên NST. Hai NST trong cặp tương đồng mang các gene tương ứng ở cùng locus.' },
+      allele:     { name: 'Allele',   text: 'Các trạng thái khác nhau của cùng một gene, nằm cùng locus trên cặp NST tương đồng. Khác nhau ở một vài vị trí nucleotide.' },
+      centromere: { name: 'Tâm động', text: 'Tâm động — nơi hai crômatit chị em dính nhau và là điểm bám của thoi phân bào trong phân chia tế bào.' },
+      telomere:   { name: 'Đầu mút',  text: 'Đầu mút (telomere) — vùng trình tự nucleotide lặp lại bảo vệ NST khỏi hư tổn và khỏi dính vào nhau.' }
     };
     var fn1Chips = document.querySelectorAll('#fn1Chips .fn-chip');
     var fn1Hint  = document.getElementById('fn1Hint');
@@ -523,6 +523,7 @@
 
     fn1Chips.forEach(function(chip){
       chip.addEventListener('click', function(){
+        if (chip.dataset.feature === structOpenFeature) { closeStructPanel(); return; }
         fn1Chips.forEach(function(c){ c.classList.remove('active'); });
         chip.classList.add('active');
         var feature = chip.dataset.feature;
@@ -541,8 +542,59 @@
         if (fn1Model) {
           gsap.fromTo(fn1Model, { scale: 1 }, { scale: 1.05, duration: 0.3, yoyo: true, repeat: 1, ease: 'power2.out' });
         }
+        openStructPanel(feature);
       });
     });
+
+    // ===== Struct panel — panel chi tiết cấu trúc (5 đường lui) =====
+    var structPanel = document.getElementById('structPanel');
+    var structBackdrop = document.getElementById('structBackdrop');
+    var structTitle = document.getElementById('structTitle');
+    var structDesc = document.getElementById('structDesc');
+    var structCloseBtn = document.getElementById('structClose');
+    var structFigs = document.querySelectorAll('.struct-fig');
+    var structOpenFeature = null;
+
+    function openStructPanel(feature){
+      var info = FEATURE_INFO[feature];
+      if (!info || !structPanel) return;
+      structOpenFeature = feature;
+      if (structTitle) structTitle.textContent = info.name;
+      if (structDesc) structDesc.textContent = info.text;
+      structFigs.forEach(function(f){ f.classList.toggle('active', f.dataset.fig === feature); });
+      structPanel.classList.add('open');
+      if (structBackdrop) structBackdrop.classList.add('open');
+      structPanel.scrollTop = 0;
+    }
+    function closeStructPanel(){
+      structOpenFeature = null;
+      if (structPanel) structPanel.classList.remove('open');
+      if (structBackdrop) structBackdrop.classList.remove('open');
+      fn1Chips.forEach(function(c){ c.classList.remove('active'); });
+      allVis.forEach(function(v){ v.classList.remove('active'); });
+      if (fn1Hint) fn1Hint.innerHTML = 'Chọn một thành phần để khám phá';
+    }
+    if (structCloseBtn) structCloseBtn.addEventListener('click', closeStructPanel);
+    if (structBackdrop) structBackdrop.addEventListener('click', closeStructPanel);
+    if (fn1Stage) fn1Stage.addEventListener('dblclick', function(){ if (structOpenFeature) closeStructPanel(); });
+    document.addEventListener('keydown', function(e){
+      if ((e.key === 'Escape' || e.key === 'Esc') && structOpenFeature) closeStructPanel();
+    });
+    // QA/debug: ?struct=gene| locus|allele|centromere|telomere mo panel ngay (tu dong vuot entry screen)
+    (function(){
+      var m = window.location.search.match(/[?&]struct=(\w+)/);
+      if (m && FEATURE_INFO[m[1]]) {
+        setTimeout(function(){
+          var es = document.getElementById('entryScreen');
+          var eb = document.getElementById('enterBtn');
+          if (eb && !eb.disabled) { try { eb.click(); } catch(e){} }
+          setTimeout(function(){
+            if (es && getComputedStyle(es).display !== 'none') es.style.display = 'none';
+            openStructPanel(m[1]);
+          }, 1500);
+        }, 900);
+      }
+    })();
 
     document.querySelectorAll('#fn1Stage .fn-hotspot').forEach(function(hs){
       hs.addEventListener('click', function(e){
