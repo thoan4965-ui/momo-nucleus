@@ -22,9 +22,9 @@
           {num:'3', title:'Trình tự đặc biệt', texts:['Ngoài các gene, NST còn chứa các <b>trình tự nucleotide đặc biệt</b>.','<b>Vùng đầu mút</b> bảo vệ NST, và <b>trình tự tâm động</b> giữa hai phần bảo đảm NST di chuyển được khi phân chia tế bào.']}
         ] },
       transmit: { key:'2', name:'Truyền đạt thông tin', pos:'Chức năng 2 của NST', allele1:'', allele2:'', alleleLabel:'', desc:'Nhiễm sắc thể truyền đạt thông tin di truyền qua các thế hệ tế bào và thế hệ cơ thể, nhờ sự vận động chính xác trong nguyên phân và giảm phân.', bullets:[], fnSections:[
-          {num:'1', title:'Nguyên phân', texts:['Trong nguyên phân, NST được <b>nhân đôi và phân chia đồng đều</b> về hai tế bào con, nên thông tin di truyền được truyền đạt <i>nguyên vẹn</i> qua các thế hệ tế bào.']},
-          {num:'2', title:'Sinh sản sinh dưỡng', texts:['Ở sinh vật đơn bào và sinh vật đa bào có hình thức sinh sản sinh dưỡng, nguyên phân đảm bảo cho các tế bào có <b>bộ NST lưỡng bội như nhau</b>.']},
-          {num:'3', title:'Qua các thế hệ cơ thể', texts:['Nhờ sự vận động của NST trong <b>nguyên phân</b> và <b>giảm phân</b>, các gene được truyền nguyên vẹn cho đời sau dưới dạng <i>các tổ hợp gene khác nhau</i> từ thế hệ này sang thế hệ khác.','Nhờ vậy, sinh vật ở các thế hệ sau có thể thích nghi với các điều kiện môi trường khác nhau.']}
+          // SYNC: nội dung khối này còn 1 bản trong index.html (section fn2 → .fn-points) — sửa phải sửa CẢ 2
+          {num:'1', title:'Giảm phân & Thụ tinh', texts:['Tạo ra các <b>tổ hợp gene mới</b> khác nhau qua các thế hệ, giúp sinh vật thích nghi với môi trường thay đổi. Đồng thời khôi phục lại <b>bộ NST lưỡng bội (2n)</b> đặc trưng của loài.']},
+          {num:'2', title:'Nguyên phân', texts:['Duy trì <b>bộ NST lưỡng bội</b> đồng đều giữa các tế bào trong cơ thể. Do mỗi gene có hai bản sao (<b>hai allele trên cặp NST tương đồng</b>) nên giúp cơ thể ít bị gây hại hơn nếu một bản bị đột biến.']}
         ] }
     };
 
