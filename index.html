@@ -471,16 +471,145 @@
               <text x="500" y="505" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="13" fill="rgba(255,255,255,.4)">Giao tử đực (n) + Giao tử cái (n) → Hợp tử (2n) — khôi phục bộ NST lưỡng bội đặc trưng của loài</text>
             </svg>
 
-            <!-- SCENE: GIẢM PHÂN (đang dựng) -->
-            <svg class="sim-scene" id="sceneGiamPhan" viewBox="0 0 1000 520" role="img" aria-label="Giảm phân - đang dựng">
-              <text x="500" y="248" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="17" fill="rgba(255,255,255,.45)">GIẢM PHÂN — animation đang được dựng</text>
-              <text x="500" y="280" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="13" fill="rgba(255,255,255,.3)">(giảm phân I · II theo SGK — sẽ ra ở bản kế tiếp)</text>
+            <!-- SCENE: GIẢM PHÂN -->
+            <svg class="sim-scene" id="sceneGiamPhan" viewBox="0 0 1000 520" role="img" aria-label="Giảm phân: một tế bào 2n tạo bốn giao tử n, có tiếp hợp và trao đổi chéo">
+              <defs>
+                <filter id="gp_glow" x="-80%" y="-80%" width="260%" height="260%"><feGaussianBlur stdDeviation="5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+              </defs>
+
+              <circle class="gp-cell" cx="500" cy="250" r="205" fill="rgba(127,227,255,.05)" stroke="rgba(127,227,255,.5)" stroke-width="2"/>
+
+              <g class="gp-spindle" opacity="0">
+                <g stroke="rgba(255,90,122,.45)" stroke-width="1.5" stroke-dasharray="6 6">
+                  <line x1="500" y1="16" x2="466" y2="228"/><line x1="500" y1="16" x2="534" y2="228"/>
+                  <line x1="500" y1="484" x2="466" y2="272"/><line x1="500" y1="484" x2="534" y2="272"/>
+                </g>
+                <circle cx="500" cy="18" r="5" fill="rgba(255,90,122,.6)"/>
+                <circle cx="500" cy="482" r="5" fill="rgba(255,90,122,.6)"/>
+              </g>
+
+              <!-- cặp NST tương đồng kép: bố (xanh) + mẹ (hồng) -->
+              <g class="gp-xb">
+                <line x1="430" y1="205" x2="430" y2="295" stroke="rgba(127,227,255,.6)" stroke-width="16" stroke-linecap="round" transform="rotate(24 430 250)"/>
+                <line x1="430" y1="205" x2="430" y2="295" stroke="rgba(127,227,255,.6)" stroke-width="16" stroke-linecap="round" transform="rotate(-24 430 250)"/>
+                <circle cx="430" cy="250" r="6" fill="#7fe3ff"/>
+                <line class="gp-tip-p" x1="417" y1="209" x2="424" y2="222" stroke="#ff8ca5" stroke-width="11" stroke-linecap="round" opacity="0"/>
+              </g>
+              <g class="gp-xp">
+                <line x1="570" y1="205" x2="570" y2="295" stroke="rgba(255,140,165,.6)" stroke-width="16" stroke-linecap="round" transform="rotate(24 570 250)"/>
+                <line x1="570" y1="205" x2="570" y2="295" stroke="rgba(255,140,165,.6)" stroke-width="16" stroke-linecap="round" transform="rotate(-24 570 250)"/>
+                <circle cx="570" cy="250" r="6" fill="#ff8ca5"/>
+                <line class="gp-tip-c" x1="576" y1="222" x2="583" y2="209" stroke="#7fe3ff" stroke-width="11" stroke-linecap="round" opacity="0"/>
+              </g>
+
+              <!-- marker trao đổi chéo -->
+              <g class="gp-cross" opacity="0" filter="url(#gp_glow)">
+                <text x="500" y="262" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="34" fill="#ffd24a">✕</text>
+              </g>
+
+              <!-- cuối I: 2 tế bào trung gian (n kép) -->
+              <g class="gp-cells1" opacity="0">
+                <circle cx="500" cy="150" r="118" fill="rgba(127,227,255,.05)" stroke="rgba(127,227,255,.5)" stroke-width="2"/>
+                <circle cx="500" cy="370" r="118" fill="rgba(127,227,255,.05)" stroke="rgba(127,227,255,.5)" stroke-width="2"/>
+              </g>
+
+              <!-- giảm phân II: NST kép tách tại tâm động thành NST đơn -->
+              <g class="gp-rods2" opacity="0">
+                <line class="gp-rod-b1" x1="500" y1="116" x2="500" y2="184" stroke="rgba(127,227,255,.65)" stroke-width="14" stroke-linecap="round"/>
+                <circle class="gp-rod-b1" cx="500" cy="150" r="5" fill="#7fe3ff"/>
+                <line class="gp-rod-b2" x1="500" y1="116" x2="500" y2="184" stroke="rgba(127,227,255,.65)" stroke-width="14" stroke-linecap="round"/>
+                <circle class="gp-rod-b2" cx="500" cy="150" r="5" fill="#7fe3ff"/>
+                <line class="gp-rod-p1" x1="500" y1="336" x2="500" y2="404" stroke="rgba(255,140,165,.65)" stroke-width="14" stroke-linecap="round"/>
+                <circle class="gp-rod-p1" cx="500" cy="370" r="5" fill="#ff8ca5"/>
+                <line class="gp-rod-p2" x1="500" y1="336" x2="500" y2="404" stroke="rgba(255,140,165,.65)" stroke-width="14" stroke-linecap="round"/>
+                <circle class="gp-rod-p2" cx="500" cy="370" r="5" fill="#ff8ca5"/>
+              </g>
+
+              <!-- 4 giao tử (n) -->
+              <g class="gp-gametes" opacity="0">
+                <circle cx="350" cy="140" r="95" fill="rgba(127,227,255,.05)" stroke="rgba(127,227,255,.5)" stroke-width="2"/>
+                <line x1="350" y1="108" x2="350" y2="172" stroke="rgba(127,227,255,.65)" stroke-width="12" stroke-linecap="round"/>
+                <circle cx="350" cy="140" r="4.5" fill="#7fe3ff"/>
+                <text x="350" y="140" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="13" fill="rgba(255,255,255,.55)" dy="-38">n</text>
+
+                <circle cx="650" cy="140" r="95" fill="rgba(127,227,255,.05)" stroke="rgba(127,227,255,.5)" stroke-width="2"/>
+                <line x1="650" y1="108" x2="650" y2="172" stroke="rgba(127,227,255,.65)" stroke-width="12" stroke-linecap="round"/>
+                <circle cx="650" cy="140" r="4.5" fill="#7fe3ff"/>
+                <text x="650" y="140" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="13" fill="rgba(255,255,255,.55)" dy="-38">n</text>
+
+                <circle cx="350" cy="380" r="95" fill="rgba(255,140,165,.05)" stroke="rgba(255,140,165,.5)" stroke-width="2"/>
+                <line x1="350" y1="348" x2="350" y2="412" stroke="rgba(255,140,165,.65)" stroke-width="12" stroke-linecap="round"/>
+                <circle cx="350" cy="380" r="4.5" fill="#ff8ca5"/>
+                <text x="350" y="380" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="13" fill="rgba(255,255,255,.55)" dy="-38">n</text>
+
+                <circle cx="650" cy="380" r="95" fill="rgba(255,140,165,.05)" stroke="rgba(255,140,165,.5)" stroke-width="2"/>
+                <line x1="650" y1="348" x2="650" y2="412" stroke="rgba(255,140,165,.65)" stroke-width="12" stroke-linecap="round"/>
+                <circle cx="650" cy="380" r="4.5" fill="#ff8ca5"/>
+                <text x="650" y="380" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="13" fill="rgba(255,255,255,.55)" dy="-38">n</text>
+              </g>
+
+              <text x="500" y="505" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="13" fill="rgba(255,255,255,.4)">Giảm phân — 1 tế bào (2n) → 4 giao tử (n) · tiếp hợp + trao đổi chéo tạo biến dị tổ hợp</text>
             </svg>
 
-            <!-- SCENE: NGUYÊN PHÂN (đang dựng) -->
-            <svg class="sim-scene" id="sceneNguyenPhan" viewBox="0 0 1000 520" role="img" aria-label="Nguyên phân - đang dựng">
-              <text x="500" y="248" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="17" fill="rgba(255,255,255,.45)">NGUYÊN PHÂN — animation đang được dựng</text>
-              <text x="500" y="280" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="13" fill="rgba(255,255,255,.3)">(kì trung gian → kì cuối theo SGK — sẽ ra ở bản kế tiếp)</text>
+            <!-- SCENE: NGUYÊN PHÂN -->
+            <svg class="sim-scene" id="sceneNguyenPhan" viewBox="0 0 1000 520" role="img" aria-label="Nguyên phân: một tế bào mẹ 2n chia thành hai tế bào con 2n">
+              <defs>
+                <filter id="np_glow" x="-80%" y="-80%" width="260%" height="260%"><feGaussianBlur stdDeviation="5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+              </defs>
+
+              <circle class="np-cell" cx="500" cy="250" r="205" fill="rgba(127,227,255,.05)" stroke="rgba(127,227,255,.5)" stroke-width="2"/>
+              <circle class="np-nuc" cx="500" cy="250" r="150" fill="none" stroke="rgba(184,138,255,.5)" stroke-width="1.6" stroke-dasharray="6 7"/>
+
+              <!-- kì trung gian: sợi nhiễm sắc -->
+              <g class="np-threads" stroke="rgba(127,227,255,.5)" stroke-width="2.6" fill="none" stroke-linecap="round">
+                <path d="M 440 200 q 30 -26 60 0 q 30 26 60 0"/>
+                <path d="M 430 258 q 35 28 70 0 q 35 -28 70 0"/>
+                <path d="M 450 315 q 25 -22 50 0 q 25 22 50 0"/>
+              </g>
+
+              <!-- thoi phân bào -->
+              <g class="np-spindle" opacity="0">
+                <g stroke="rgba(255,90,122,.45)" stroke-width="1.5" stroke-dasharray="6 6">
+                  <line x1="500" y1="16" x2="462" y2="226"/><line x1="500" y1="16" x2="538" y2="226"/>
+                  <line x1="500" y1="484" x2="462" y2="274"/><line x1="500" y1="484" x2="538" y2="274"/>
+                </g>
+                <circle cx="500" cy="18" r="5" fill="rgba(255,90,122,.6)"/>
+                <circle cx="500" cy="482" r="5" fill="rgba(255,90,122,.6)"/>
+              </g>
+
+              <!-- 2 NST kép -->
+              <g class="np-xa" opacity="0">
+                <line x1="460" y1="205" x2="460" y2="295" stroke="rgba(127,227,255,.6)" stroke-width="16" stroke-linecap="round" transform="rotate(24 460 250)"/>
+                <line x1="460" y1="205" x2="460" y2="295" stroke="rgba(127,227,255,.6)" stroke-width="16" stroke-linecap="round" transform="rotate(-24 460 250)"/>
+                <circle cx="460" cy="250" r="6" fill="#7fe3ff"/>
+              </g>
+              <g class="np-xb" opacity="0">
+                <line x1="540" y1="205" x2="540" y2="295" stroke="rgba(255,140,165,.6)" stroke-width="16" stroke-linecap="round" transform="rotate(24 540 250)"/>
+                <line x1="540" y1="205" x2="540" y2="295" stroke="rgba(255,140,165,.6)" stroke-width="16" stroke-linecap="round" transform="rotate(-24 540 250)"/>
+                <circle cx="540" cy="250" r="6" fill="#ff8ca5"/>
+              </g>
+
+              <!-- NST đơn (kì sau) -->
+              <g class="np-rods" opacity="0">
+                <line class="np-rod-a1" x1="460" y1="216" x2="460" y2="284" stroke="rgba(127,227,255,.65)" stroke-width="14" stroke-linecap="round"/>
+                <circle class="np-rod-a1" cx="460" cy="250" r="5" fill="#7fe3ff"/>
+                <line class="np-rod-a2" x1="460" y1="216" x2="460" y2="284" stroke="rgba(127,227,255,.65)" stroke-width="14" stroke-linecap="round"/>
+                <circle class="np-rod-a2" cx="460" cy="250" r="5" fill="#7fe3ff"/>
+                <line class="np-rod-b1" x1="540" y1="216" x2="540" y2="284" stroke="rgba(255,140,165,.65)" stroke-width="14" stroke-linecap="round"/>
+                <circle class="np-rod-b1" cx="540" cy="250" r="5" fill="#ff8ca5"/>
+                <line class="np-rod-b2" x1="540" y1="216" x2="540" y2="284" stroke="rgba(255,140,165,.65)" stroke-width="14" stroke-linecap="round"/>
+                <circle class="np-rod-b2" cx="540" cy="250" r="5" fill="#ff8ca5"/>
+              </g>
+
+              <!-- kì cuối: 2 tế bào con -->
+              <g class="np-daughters" opacity="0">
+                <circle cx="500" cy="150" r="118" fill="rgba(127,227,255,.05)" stroke="rgba(127,227,255,.5)" stroke-width="2"/>
+                <circle cx="500" cy="150" r="86" fill="none" stroke="rgba(184,138,255,.5)" stroke-width="1.5" stroke-dasharray="6 7"/>
+                <circle cx="500" cy="370" r="118" fill="rgba(127,227,255,.05)" stroke="rgba(127,227,255,.5)" stroke-width="2"/>
+                <circle cx="500" cy="370" r="86" fill="none" stroke="rgba(184,138,255,.5)" stroke-width="1.5" stroke-dasharray="6 7"/>
+              </g>
+
+              <text x="500" y="505" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="13" fill="rgba(255,255,255,.4)">Nguyên phân — 1 tế bào mẹ (2n) → 2 tế bào con (2n) giống hệt mẹ</text>
             </svg>
           </div>
 

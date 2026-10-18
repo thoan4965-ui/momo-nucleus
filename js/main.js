@@ -631,31 +631,96 @@
     var simPlayBtn = document.getElementById('simPlay');
     var SIM_PHASES = {
       thutinh:    [['Giao tử (n)', 0], ['Kết hợp', 1.2], ['Hợp tử (2n)', 3.6]],
-      giamphan:   [['Kì đầu I', 0], ['Tiếp hợp & trao đổi chéo', 0.6], ['Giảm phân II', 1.2], ['4 giao tử (n)', 1.8]],
-      nguyenphan: [['Kì trung gian', 0], ['Kì đầu', 0.6], ['Kì giữa', 1.2], ['Kì sau', 1.8], ['Kì cuối', 2.4]]
+      giamphan:   [['Kì đầu I', 0], ['Tiếp hợp & trao đổi chéo', 1.4], ['Kì giữa I', 3.0], ['Kì sau I', 4.2], ['Giảm phân II', 6.8], ['4 giao tử (n)', 8.4]],
+      nguyenphan: [['Kì trung gian', 0], ['Kì đầu', 1.2], ['Kì giữa', 2.6], ['Kì sau', 4.2], ['Kì cuối', 6.2]]
     };
     var simTimelines = {};
 
+    function markSimPhase(tab, idx){
+      if (!simPhasesWrap || !simLab || simLab.dataset.tab !== tab) return;
+      Array.prototype.forEach.call(simPhasesWrap.querySelectorAll('.sim-phase'), function(c, i){
+        c.classList.toggle('active', i === idx);
+      });
+    }
+
+    // GSAP seek() suppress callbacks → chip khong tu cap nhat khi seek truc tiep. Tinh idx tu SIM_PHASES.
+    function syncSimPhase(tab, time){
+      var ph = SIM_PHASES[tab] || [];
+      var idx = 0;
+      for (var i = 0; i < ph.length; i++){ if (time >= ph[i][1] - 0.001) idx = i; }
+      markSimPhase(tab, idx);
+    }
+
     function buildSimTimeline(tab){
       if (simTimelines[tab]) return simTimelines[tab];
+      var tl;
       if (tab === 'thutinh') {
-        var tl = gsap.timeline({ paused: true });
+        tl = gsap.timeline({ paused: true });
         tl.addLabel('giao_tu', 0).addLabel('ket_hop', 1.2).addLabel('hop_tu', 3.6);
         tl.to('.st-male', { x: 270, duration: 1.5, ease: 'power2.inOut' }, 1.2)
           .to('.st-female', { x: -270, duration: 1.5, ease: 'power2.inOut' }, 1.2)
           .to('.st-plus', { opacity: 0, duration: 0.4 }, 1.3)
           .to('.st-zygote', { opacity: 1, duration: 0.9, ease: 'power2.out' }, 3.0)
-          .to('.st-male, .st-female', { opacity: 0, duration: 0.7, ease: 'power2.in' }, 3.4);
-        simTimelines[tab] = tl;
+          .to('.st-male, .st-female', { opacity: 0, duration: 0.7, ease: 'power2.in' }, 3.4)
+          .add(function(){ markSimPhase('thutinh', 1); }, 1.2)
+          .add(function(){ markSimPhase('thutinh', 2); }, 3.6);
+      } else if (tab === 'nguyenphan') {
+        tl = gsap.timeline({ paused: true });
+        tl.addLabel('tg', 0).addLabel('dau', 1.2).addLabel('giua', 2.6).addLabel('sau', 4.2).addLabel('cuoi', 6.2);
+        tl.to('.np-threads', { opacity: 0, duration: 0.5 }, 1.2)
+          .to('.np-nuc', { opacity: 0, duration: 0.6 }, 1.2)
+          .to('.np-xa, .np-xb', { opacity: 1, duration: 0.7 }, 1.5)
+          .to('.np-spindle', { opacity: 1, duration: 0.7 }, 1.9)
+          .to('.np-xa, .np-xb', { opacity: 0, duration: 0.35 }, 4.2)
+          .to('.np-rods', { opacity: 1, duration: 0.3 }, 4.35)
+          .to('.np-rod-a1, .np-rod-b1', { y: -100, duration: 1.4, ease: 'power2.inOut' }, 4.35)
+          .to('.np-rod-a2, .np-rod-b2', { y: 100, duration: 1.4, ease: 'power2.inOut' }, 4.35)
+          .to('.np-cell', { opacity: 0.12, duration: 0.8 }, 6.2)
+          .to('.np-spindle', { opacity: 0, duration: 0.6 }, 6.2)
+          .to('.np-rods', { opacity: 0, duration: 0.5 }, 6.6)
+          .to('.np-daughters', { opacity: 1, duration: 0.9 }, 6.8)
+          .add(function(){ markSimPhase('nguyenphan', 1); }, 1.2)
+          .add(function(){ markSimPhase('nguyenphan', 2); }, 2.6)
+          .add(function(){ markSimPhase('nguyenphan', 3); }, 4.2)
+          .add(function(){ markSimPhase('nguyenphan', 4); }, 6.2);
+      } else if (tab === 'giamphan') {
+        tl = gsap.timeline({ paused: true });
+        tl.addLabel('dau1', 0).addLabel('tiep_hop', 1.4).addLabel('giua1', 3.0).addLabel('sau1', 4.2).addLabel('gp2', 6.8).addLabel('giao_tu', 8.4);
+        tl.to('.gp-xb', { x: 30, y: -20, duration: 1.0, ease: 'power2.inOut' }, 1.4)
+          .to('.gp-xp', { x: -30, y: 20, duration: 1.0, ease: 'power2.inOut' }, 1.4)
+          .to('.gp-cross', { opacity: 1, duration: 0.5 }, 1.7)
+          .to('.gp-tip-p, .gp-tip-c', { opacity: 1, duration: 0.4 }, 2.3)
+          .to('.gp-cross', { opacity: 0, duration: 0.4 }, 2.5)
+          .to('.gp-spindle', { opacity: 1, duration: 0.7 }, 2.8)
+          .to('.gp-xb', { y: -110, duration: 1.4, ease: 'power2.inOut' }, 4.2)
+          .to('.gp-xp', { y: 110, duration: 1.4, ease: 'power2.inOut' }, 4.2)
+          .to('.gp-cell', { opacity: 0.12, duration: 0.8 }, 5.6)
+          .to('.gp-spindle', { opacity: 0, duration: 0.6 }, 5.6)
+          .to('.gp-xb, .gp-xp', { opacity: 0, duration: 0.4 }, 5.8)
+          .to('.gp-cells1', { opacity: 1, duration: 0.8 }, 5.9)
+          .to('.gp-rods2', { opacity: 1, duration: 0.3 }, 6.8)
+          .to('.gp-rod-b1', { x: -70, duration: 1.2, ease: 'power2.inOut' }, 6.8)
+          .to('.gp-rod-b2', { x: 70, duration: 1.2, ease: 'power2.inOut' }, 6.8)
+          .to('.gp-rod-p1', { x: -70, duration: 1.2, ease: 'power2.inOut' }, 6.8)
+          .to('.gp-rod-p2', { x: 70, duration: 1.2, ease: 'power2.inOut' }, 6.8)
+          .to('.gp-rods2', { opacity: 0, duration: 0.4 }, 8.1)
+          .to('.gp-cells1', { opacity: 0, duration: 0.5 }, 8.2)
+          .to('.gp-gametes', { opacity: 1, duration: 0.9 }, 8.4)
+          .add(function(){ markSimPhase('giamphan', 1); }, 1.4)
+          .add(function(){ markSimPhase('giamphan', 2); }, 3.0)
+          .add(function(){ markSimPhase('giamphan', 3); }, 4.2)
+          .add(function(){ markSimPhase('giamphan', 4); }, 6.8)
+          .add(function(){ markSimPhase('giamphan', 5); }, 8.4);
       }
-      return simTimelines[tab];
+      simTimelines[tab] = tl;
+      return tl;
     }
 
     function renderSimPhases(tab){
       if (!simPhasesWrap) return;
       var ph = SIM_PHASES[tab] || [];
       simPhasesWrap.innerHTML = ph.map(function(p, i){
-        return '<button class="fn-chip sim-phase' + (i === 0 ? ' active' : '') + '" data-t="' + p[1] + '">' + p[0] + '</button>';
+        return '<button class="fn-chip sim-phase' + (i === 0 ? ' active' : '') + '" data-idx="' + i + '" data-t="' + p[1] + '">' + p[0] + '</button>';
       }).join('');
       Array.prototype.slice.call(simPhasesWrap.querySelectorAll('.sim-phase')).forEach(function(chip){
         chip.addEventListener('click', function(){
@@ -727,8 +792,9 @@
             }
             var ms = window.location.search.match(/[?&]simseek=([\d.]+)/);
             if (ms) {
-              var tl = simTimelines['thutinh'];
-              if (tl) { tl.pause(); tl.seek(parseFloat(ms[1])); }
+              var tab = (simLab && simLab.dataset.tab) || 'thutinh';
+              var tl = simTimelines[tab];
+              if (tl) { tl.pause(); tl.seek(parseFloat(ms[1])); syncSimPhase(tab, parseFloat(ms[1])); }
               if (simPlayBtn) simPlayBtn.classList.remove('playing');
             }
           } catch (e) { console.error('[sim QA]', e); }
