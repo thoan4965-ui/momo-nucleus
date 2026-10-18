@@ -489,10 +489,12 @@
         }
         gsap.from(sel+' .fn-visual-wrap',{scrollTrigger:{trigger:sel,start:'top 78%',toggleActions:'play none none none'},y:50,opacity:0,scale:0.94,duration:1.2,ease:'power2.out'});
         gsap.to(sel+' .fn-num-deco',{scrollTrigger:{trigger:sel,start:'top bottom',end:'bottom top',scrub:1},y:-100,ease:'none'});
-        gsap.to(sel+' .fn-visual-wrap', {
-          scrollTrigger: { trigger: sel, start: 'top bottom', end: 'bottom top', scrub: 1 },
-          y: -40, ease: 'none'
-        });
+        if (sel !== '#fn2') {
+          gsap.to(sel+' .fn-visual-wrap', {
+            scrollTrigger: { trigger: sel, start: 'top bottom', end: 'bottom top', scrub: 1 },
+            y: -40, ease: 'none'
+          });
+        }
       });
       
       // Animation cho AI section
@@ -632,7 +634,7 @@
     var SIM_PHASES = {
       thutinh:    [['Giao tử (n)', 0], ['Kết hợp', 1.2], ['Hợp tử (2n)', 3.6]],
       giamphan:   [['Kì đầu I', 0], ['Tiếp hợp & trao đổi chéo', 1.4], ['Kì giữa I', 3.0], ['Kì sau I', 4.2], ['Giảm phân II', 6.8], ['4 giao tử (n)', 8.4]],
-      nguyenphan: [['Kì trung gian', 0], ['Kì đầu', 1.2], ['Kì giữa', 2.6], ['Kì sau', 4.2], ['Kì cuối', 6.2]]
+      nguyenphan: [['Kì trung gian', 0], ['Kì đầu', 1.2], ['Kì giữa', 2.6], ['Kì sau', 3.6], ['Kì cuối', 5.4]]
     };
     var simTimelines = {};
 
@@ -666,23 +668,25 @@
           .add(function(){ markSimPhase('thutinh', 2); }, 3.6);
       } else if (tab === 'nguyenphan') {
         tl = gsap.timeline({ paused: true });
-        tl.addLabel('tg', 0).addLabel('dau', 1.2).addLabel('giua', 2.6).addLabel('sau', 4.2).addLabel('cuoi', 6.2);
+        tl.addLabel('tg', 0).addLabel('dau', 1.2).addLabel('giua', 2.6).addLabel('sau', 3.6).addLabel('cuoi', 5.4);
         tl.to('.np-threads', { opacity: 0, duration: 0.5 }, 1.2)
           .to('.np-nuc', { opacity: 0, duration: 0.6 }, 1.2)
           .to('.np-xa, .np-xb', { opacity: 1, duration: 0.7 }, 1.5)
           .to('.np-spindle', { opacity: 1, duration: 0.7 }, 1.9)
-          .to('.np-xa, .np-xb', { opacity: 0, duration: 0.35 }, 4.2)
-          .to('.np-rods', { opacity: 1, duration: 0.3 }, 4.35)
-          .to('.np-rod-a1, .np-rod-b1', { y: -100, duration: 1.4, ease: 'power2.inOut' }, 4.35)
-          .to('.np-rod-a2, .np-rod-b2', { y: 100, duration: 1.4, ease: 'power2.inOut' }, 4.35)
-          .to('.np-cell', { opacity: 0.12, duration: 0.8 }, 6.2)
-          .to('.np-spindle', { opacity: 0, duration: 0.6 }, 6.2)
-          .to('.np-rods', { opacity: 0, duration: 0.5 }, 6.6)
-          .to('.np-daughters', { opacity: 1, duration: 0.9 }, 6.8)
+          .to('.np-spindle', { opacity: 0.55, duration: 0.35, yoyo: true, repeat: 1 }, 2.9)
+          .to('.np-chr-a1', { rotation: 0, y: -100, duration: 1.4, ease: 'power2.inOut', svgOrigin: '460 250' }, 3.6)
+          .to('.np-chr-a2', { rotation: 0, y: 100, duration: 1.4, ease: 'power2.inOut', svgOrigin: '460 250' }, 3.6)
+          .to('.np-chr-b1', { rotation: 0, y: -100, duration: 1.4, ease: 'power2.inOut', svgOrigin: '540 250' }, 3.6)
+          .to('.np-chr-b2', { rotation: 0, y: 100, duration: 1.4, ease: 'power2.inOut', svgOrigin: '540 250' }, 3.6)
+          .to('.np-cell', { opacity: 0.12, duration: 0.8 }, 5.4)
+          .to('.np-spindle', { opacity: 0, duration: 0.6 }, 5.4)
+          .to('.np-xa, .np-xb', { opacity: 0, duration: 0.5 }, 5.6)
+          .to('.np-daughters', { opacity: 1, duration: 0.9 }, 5.7)
+          .to('.np-dthreads', { opacity: 1, duration: 0.9 }, 5.9)
           .add(function(){ markSimPhase('nguyenphan', 1); }, 1.2)
           .add(function(){ markSimPhase('nguyenphan', 2); }, 2.6)
-          .add(function(){ markSimPhase('nguyenphan', 3); }, 4.2)
-          .add(function(){ markSimPhase('nguyenphan', 4); }, 6.2);
+          .add(function(){ markSimPhase('nguyenphan', 3); }, 3.6)
+          .add(function(){ markSimPhase('nguyenphan', 4); }, 5.4);
       } else if (tab === 'giamphan') {
         tl = gsap.timeline({ paused: true });
         tl.addLabel('dau1', 0).addLabel('tiep_hop', 1.4).addLabel('giua1', 3.0).addLabel('sau1', 4.2).addLabel('gp2', 6.8).addLabel('giao_tu', 8.4);
@@ -692,18 +696,19 @@
           .to('.gp-tip-p, .gp-tip-c', { opacity: 1, duration: 0.4 }, 2.3)
           .to('.gp-cross', { opacity: 0, duration: 0.4 }, 2.5)
           .to('.gp-spindle', { opacity: 1, duration: 0.7 }, 2.8)
+          .to('.gp-spindle', { opacity: 0.55, duration: 0.35, yoyo: true, repeat: 1 }, 3.5)
           .to('.gp-xb', { y: -110, duration: 1.4, ease: 'power2.inOut' }, 4.2)
           .to('.gp-xp', { y: 110, duration: 1.4, ease: 'power2.inOut' }, 4.2)
           .to('.gp-cell', { opacity: 0.12, duration: 0.8 }, 5.6)
           .to('.gp-spindle', { opacity: 0, duration: 0.6 }, 5.6)
           .to('.gp-xb, .gp-xp', { opacity: 0, duration: 0.4 }, 5.8)
           .to('.gp-cells1', { opacity: 1, duration: 0.8 }, 5.9)
-          .to('.gp-rods2', { opacity: 1, duration: 0.3 }, 6.8)
-          .to('.gp-rod-b1', { x: -70, duration: 1.2, ease: 'power2.inOut' }, 6.8)
-          .to('.gp-rod-b2', { x: 70, duration: 1.2, ease: 'power2.inOut' }, 6.8)
-          .to('.gp-rod-p1', { x: -70, duration: 1.2, ease: 'power2.inOut' }, 6.8)
-          .to('.gp-rod-p2', { x: 70, duration: 1.2, ease: 'power2.inOut' }, 6.8)
-          .to('.gp-rods2', { opacity: 0, duration: 0.4 }, 8.1)
+          .to('.gp-keps', { opacity: 1, duration: 0.6 }, 6.0)
+          .to('.gp-kep-t1', { rotation: 0, x: -70, duration: 1.2, ease: 'power2.inOut', svgOrigin: '500 150' }, 6.8)
+          .to('.gp-kep-t2', { rotation: 0, x: 70, duration: 1.2, ease: 'power2.inOut', svgOrigin: '500 150' }, 6.8)
+          .to('.gp-kep-b1', { rotation: 0, x: -70, duration: 1.2, ease: 'power2.inOut', svgOrigin: '500 370' }, 6.8)
+          .to('.gp-kep-b2', { rotation: 0, x: 70, duration: 1.2, ease: 'power2.inOut', svgOrigin: '500 370' }, 6.8)
+          .to('.gp-keps', { opacity: 0, duration: 0.4 }, 8.1)
           .to('.gp-cells1', { opacity: 0, duration: 0.5 }, 8.2)
           .to('.gp-gametes', { opacity: 1, duration: 0.9 }, 8.4)
           .add(function(){ markSimPhase('giamphan', 1); }, 1.4)
@@ -752,19 +757,16 @@
     });
 
     if (simPlayBtn) simPlayBtn.addEventListener('click', function(){
-      var tl = buildSimTimeline(simLab.dataset.tab);
+      var tab = simLab.dataset.tab;
+      var tl = buildSimTimeline(tab);
       if (!tl) return;
       simPlayBtn.classList.add('playing');
-      if (tl.progress() >= 1) { tl.restart(); } else { tl.play(); }
+      tl.restart();
+      syncSimPhase(tab, 0);
       tl.eventCallback('onComplete', function(){ simPlayBtn.classList.remove('playing'); });
     });
 
     if (simLab) setSimTab('thutinh');
-
-    if (typeof ScrollTrigger !== 'undefined' && simLab) {
-      ScrollTrigger.create({ trigger: simLab, start: 'top 60%', once: true,
-        onEnter: function(){ setTimeout(function(){ if (simPlayBtn) simPlayBtn.click(); }, 400); } });
-    }
 
     // QA/debug: ?sim=1 vuot entry (khong chay ink/intro) + nhay toi phong mo phong; ?simseek=3.6 seek
     (function(){
@@ -799,6 +801,41 @@
             }
           } catch (e) { console.error('[sim QA]', e); }
         }, 1200);
+      });
+    })();
+
+    // QA: ?qa=overflow — do tran ngang (headless 360px): ghi scrollWidth + phan tu tran vao title
+    (function(){
+      if (!/[?&]qa=overflow/.test(window.location.search)) return;
+      window.addEventListener('load', function(){
+        setTimeout(function(){
+          try {
+            var de = document.documentElement;
+            var cw = de.clientWidth;
+            var list = [];
+            function inScroller(el){
+              var p = el.parentElement;
+              while (p && p !== document.body){
+                var ox = getComputedStyle(p).overflowX;
+                if (ox === 'auto' || ox === 'scroll' || ox === 'hidden') return true;
+                p = p.parentElement;
+              }
+              return false;
+            }
+            Array.prototype.forEach.call(document.querySelectorAll('body *'), function(el){
+              var r = el.getBoundingClientRect();
+              if (r.width > 0 && r.right - cw > 1 && !inScroller(el)) {
+                var cls = (typeof el.className === 'string') ? el.className : '';
+                list.push(Math.round(r.right - cw) + ':' + el.tagName + (cls ? '.' + cls.split(' ')[0] : ''));
+              }
+            });
+            document.title = 'QAOVF sw=' + de.scrollWidth + ' cw=' + cw + ' over=' + (list.slice(0, 8).join('|') || 'none');
+            var banner = document.createElement('div');
+            banner.style.cssText = 'position:fixed;top:0;left:0;z-index:99999;background:#000;color:#0f0;font:11px monospace;padding:4px 8px;max-width:100vw;word-break:break-all;';
+            banner.textContent = document.title;
+            document.body.appendChild(banner);
+          } catch (e) { document.title = 'QAOVF err=' + e.message; }
+        }, 1600);
       });
     })();
 

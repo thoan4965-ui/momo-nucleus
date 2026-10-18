@@ -429,8 +429,7 @@
               <g class="st-male">
                 <circle cx="230" cy="250" r="112" fill="rgba(127,227,255,.07)" stroke="rgba(127,227,255,.6)" stroke-width="2"/>
                 <g>
-                  <line x1="230" y1="205" x2="230" y2="295" stroke="rgba(127,227,255,.55)" stroke-width="15" stroke-linecap="round" transform="rotate(24 230 250)"/>
-                  <line x1="230" y1="205" x2="230" y2="295" stroke="rgba(127,227,255,.55)" stroke-width="15" stroke-linecap="round" transform="rotate(-24 230 250)"/>
+                  <line x1="230" y1="208" x2="230" y2="292" stroke="rgba(127,227,255,.55)" stroke-width="15" stroke-linecap="round"/>
                   <circle cx="230" cy="250" r="6" fill="#7fe3ff"/>
                 </g>
                 <rect x="136" y="382" width="188" height="34" rx="17" fill="rgba(127,227,255,.10)" stroke="rgba(127,227,255,.55)"/>
@@ -441,8 +440,7 @@
               <g class="st-female">
                 <circle cx="770" cy="250" r="130" fill="rgba(255,90,122,.06)" stroke="rgba(255,90,122,.55)" stroke-width="2"/>
                 <g>
-                  <line x1="770" y1="203" x2="770" y2="297" stroke="rgba(255,140,165,.55)" stroke-width="15" stroke-linecap="round" transform="rotate(24 770 250)"/>
-                  <line x1="770" y1="203" x2="770" y2="297" stroke="rgba(255,140,165,.55)" stroke-width="15" stroke-linecap="round" transform="rotate(-24 770 250)"/>
+                  <line x1="770" y1="203" x2="770" y2="297" stroke="rgba(255,140,165,.55)" stroke-width="15" stroke-linecap="round"/>
                   <circle cx="770" cy="250" r="6" fill="#ff8ca5"/>
                 </g>
                 <rect x="676" y="398" width="188" height="34" rx="17" fill="rgba(255,90,122,.10)" stroke="rgba(255,90,122,.55)"/>
@@ -455,13 +453,11 @@
               <g class="st-zygote">
                 <circle cx="500" cy="250" r="150" fill="rgba(184,138,255,.07)" stroke="rgba(184,138,255,.75)" stroke-width="2.2" filter="url(#st_glow)"/>
                 <g>
-                  <line x1="462" y1="212" x2="462" y2="288" stroke="rgba(127,227,255,.6)" stroke-width="13" stroke-linecap="round" transform="rotate(24 462 250)"/>
-                  <line x1="462" y1="212" x2="462" y2="288" stroke="rgba(127,227,255,.6)" stroke-width="13" stroke-linecap="round" transform="rotate(-24 462 250)"/>
+                  <line x1="462" y1="212" x2="462" y2="288" stroke="rgba(127,227,255,.6)" stroke-width="13" stroke-linecap="round"/>
                   <circle cx="462" cy="250" r="5" fill="#7fe3ff"/>
                 </g>
                 <g>
-                  <line x1="538" y1="212" x2="538" y2="288" stroke="rgba(255,140,165,.6)" stroke-width="13" stroke-linecap="round" transform="rotate(24 538 250)"/>
-                  <line x1="538" y1="212" x2="538" y2="288" stroke="rgba(255,140,165,.6)" stroke-width="13" stroke-linecap="round" transform="rotate(-24 538 250)"/>
+                  <line x1="538" y1="212" x2="538" y2="288" stroke="rgba(255,140,165,.6)" stroke-width="13" stroke-linecap="round"/>
                   <circle cx="538" cy="250" r="5" fill="#ff8ca5"/>
                 </g>
                 <rect x="400" y="418" width="200" height="36" rx="18" fill="rgba(184,138,255,.12)" stroke="rgba(184,138,255,.65)"/>
@@ -507,22 +503,32 @@
                 <text x="500" y="262" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="34" fill="#ffd24a">✕</text>
               </g>
 
-              <!-- cuối I: 2 tế bào trung gian (n kép) -->
+              <!-- cuối I: 2 tế bào trung gian (n kép) — kèm màng nhân tái hiện -->
               <g class="gp-cells1" opacity="0">
                 <circle cx="500" cy="150" r="118" fill="rgba(127,227,255,.05)" stroke="rgba(127,227,255,.5)" stroke-width="2"/>
+                <circle cx="500" cy="150" r="86" fill="none" stroke="rgba(184,138,255,.5)" stroke-width="1.5" stroke-dasharray="6 7"/>
                 <circle cx="500" cy="370" r="118" fill="rgba(127,227,255,.05)" stroke="rgba(127,227,255,.5)" stroke-width="2"/>
+                <circle cx="500" cy="370" r="86" fill="none" stroke="rgba(184,138,255,.5)" stroke-width="1.5" stroke-dasharray="6 7"/>
               </g>
 
-              <!-- giảm phân II: NST kép tách tại tâm động thành NST đơn -->
-              <g class="gp-rods2" opacity="0">
-                <line class="gp-rod-b1" x1="500" y1="116" x2="500" y2="184" stroke="rgba(127,227,255,.65)" stroke-width="14" stroke-linecap="round"/>
-                <circle class="gp-rod-b1" cx="500" cy="150" r="5" fill="#7fe3ff"/>
-                <line class="gp-rod-b2" x1="500" y1="116" x2="500" y2="184" stroke="rgba(127,227,255,.65)" stroke-width="14" stroke-linecap="round"/>
-                <circle class="gp-rod-b2" cx="500" cy="150" r="5" fill="#7fe3ff"/>
-                <line class="gp-rod-p1" x1="500" y1="336" x2="500" y2="404" stroke="rgba(255,140,165,.65)" stroke-width="14" stroke-linecap="round"/>
-                <circle class="gp-rod-p1" cx="500" cy="370" r="5" fill="#ff8ca5"/>
-                <line class="gp-rod-p2" x1="500" y1="336" x2="500" y2="404" stroke="rgba(255,140,165,.65)" stroke-width="14" stroke-linecap="round"/>
-                <circle class="gp-rod-p2" cx="500" cy="370" r="5" fill="#ff8ca5"/>
+              <!-- giảm phân II: NST kép (X) trong mỗi tế bào → tách tại tâm động thành NST đơn -->
+              <g class="gp-keps" opacity="0">
+                <g class="gp-kep-t1" transform="rotate(16 500 150)">
+                  <line x1="500" y1="116" x2="500" y2="184" stroke="rgba(127,227,255,.65)" stroke-width="13" stroke-linecap="round"/>
+                  <circle cx="500" cy="150" r="5" fill="#7fe3ff"/>
+                </g>
+                <g class="gp-kep-t2" transform="rotate(-16 500 150)">
+                  <line x1="500" y1="116" x2="500" y2="184" stroke="rgba(127,227,255,.65)" stroke-width="13" stroke-linecap="round"/>
+                  <circle cx="500" cy="150" r="5" fill="#7fe3ff"/>
+                </g>
+                <g class="gp-kep-b1" transform="rotate(16 500 370)">
+                  <line x1="500" y1="336" x2="500" y2="404" stroke="rgba(255,140,165,.65)" stroke-width="13" stroke-linecap="round"/>
+                  <circle cx="500" cy="370" r="5" fill="#ff8ca5"/>
+                </g>
+                <g class="gp-kep-b2" transform="rotate(-16 500 370)">
+                  <line x1="500" y1="336" x2="500" y2="404" stroke="rgba(255,140,165,.65)" stroke-width="13" stroke-linecap="round"/>
+                  <circle cx="500" cy="370" r="5" fill="#ff8ca5"/>
+                </g>
               </g>
 
               <!-- 4 giao tử (n) -->
@@ -548,7 +554,7 @@
                 <text x="650" y="380" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="13" fill="rgba(255,255,255,.55)" dy="-38">n</text>
               </g>
 
-              <text x="500" y="505" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="13" fill="rgba(255,255,255,.4)">Giảm phân — 1 tế bào (2n) → 4 giao tử (n) · tiếp hợp + trao đổi chéo tạo biến dị tổ hợp</text>
+              <text x="500" y="505" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="13" fill="rgba(255,255,255,.4)">Giảm phân — 1 tế bào (2n) → 4 giao tử (n) · xanh = NST từ bố, hồng = NST từ mẹ · tiếp hợp + trao đổi chéo → biến dị tổ hợp</text>
             </svg>
 
             <!-- SCENE: NGUYÊN PHÂN -->
@@ -577,28 +583,26 @@
                 <circle cx="500" cy="482" r="5" fill="rgba(255,90,122,.6)"/>
               </g>
 
-              <!-- 2 NST kép -->
+              <!-- 2 NST kép — mỗi kép = 2 crômatit (wrapper riêng + tâm động riêng) -->
               <g class="np-xa" opacity="0">
-                <line x1="460" y1="205" x2="460" y2="295" stroke="rgba(127,227,255,.6)" stroke-width="16" stroke-linecap="round" transform="rotate(24 460 250)"/>
-                <line x1="460" y1="205" x2="460" y2="295" stroke="rgba(127,227,255,.6)" stroke-width="16" stroke-linecap="round" transform="rotate(-24 460 250)"/>
-                <circle cx="460" cy="250" r="6" fill="#7fe3ff"/>
+                <g class="np-chr-a1" transform="rotate(24 460 250)">
+                  <line x1="460" y1="205" x2="460" y2="295" stroke="rgba(127,227,255,.6)" stroke-width="16" stroke-linecap="round"/>
+                  <circle cx="460" cy="250" r="6" fill="#7fe3ff"/>
+                </g>
+                <g class="np-chr-a2" transform="rotate(-24 460 250)">
+                  <line x1="460" y1="205" x2="460" y2="295" stroke="rgba(127,227,255,.6)" stroke-width="16" stroke-linecap="round"/>
+                  <circle cx="460" cy="250" r="6" fill="#7fe3ff"/>
+                </g>
               </g>
               <g class="np-xb" opacity="0">
-                <line x1="540" y1="205" x2="540" y2="295" stroke="rgba(255,140,165,.6)" stroke-width="16" stroke-linecap="round" transform="rotate(24 540 250)"/>
-                <line x1="540" y1="205" x2="540" y2="295" stroke="rgba(255,140,165,.6)" stroke-width="16" stroke-linecap="round" transform="rotate(-24 540 250)"/>
-                <circle cx="540" cy="250" r="6" fill="#ff8ca5"/>
-              </g>
-
-              <!-- NST đơn (kì sau) -->
-              <g class="np-rods" opacity="0">
-                <line class="np-rod-a1" x1="460" y1="216" x2="460" y2="284" stroke="rgba(127,227,255,.65)" stroke-width="14" stroke-linecap="round"/>
-                <circle class="np-rod-a1" cx="460" cy="250" r="5" fill="#7fe3ff"/>
-                <line class="np-rod-a2" x1="460" y1="216" x2="460" y2="284" stroke="rgba(127,227,255,.65)" stroke-width="14" stroke-linecap="round"/>
-                <circle class="np-rod-a2" cx="460" cy="250" r="5" fill="#7fe3ff"/>
-                <line class="np-rod-b1" x1="540" y1="216" x2="540" y2="284" stroke="rgba(255,140,165,.65)" stroke-width="14" stroke-linecap="round"/>
-                <circle class="np-rod-b1" cx="540" cy="250" r="5" fill="#ff8ca5"/>
-                <line class="np-rod-b2" x1="540" y1="216" x2="540" y2="284" stroke="rgba(255,140,165,.65)" stroke-width="14" stroke-linecap="round"/>
-                <circle class="np-rod-b2" cx="540" cy="250" r="5" fill="#ff8ca5"/>
+                <g class="np-chr-b1" transform="rotate(24 540 250)">
+                  <line x1="540" y1="205" x2="540" y2="295" stroke="rgba(255,140,165,.6)" stroke-width="16" stroke-linecap="round"/>
+                  <circle cx="540" cy="250" r="6" fill="#ff8ca5"/>
+                </g>
+                <g class="np-chr-b2" transform="rotate(-24 540 250)">
+                  <line x1="540" y1="205" x2="540" y2="295" stroke="rgba(255,140,165,.6)" stroke-width="16" stroke-linecap="round"/>
+                  <circle cx="540" cy="250" r="6" fill="#ff8ca5"/>
+                </g>
               </g>
 
               <!-- kì cuối: 2 tế bào con -->
@@ -607,6 +611,14 @@
                 <circle cx="500" cy="150" r="86" fill="none" stroke="rgba(184,138,255,.5)" stroke-width="1.5" stroke-dasharray="6 7"/>
                 <circle cx="500" cy="370" r="118" fill="rgba(127,227,255,.05)" stroke="rgba(127,227,255,.5)" stroke-width="2"/>
                 <circle cx="500" cy="370" r="86" fill="none" stroke="rgba(184,138,255,.5)" stroke-width="1.5" stroke-dasharray="6 7"/>
+              </g>
+
+              <!-- kì cuối: NST dãn xoắn (sợi mảnh) trong mỗi tế bào con -->
+              <g class="np-dthreads" opacity="0">
+                <path d="M 452 138 q 24 -20 48 0 q 24 20 48 0" stroke="rgba(127,227,255,.55)" stroke-width="2.6" fill="none" stroke-linecap="round"/>
+                <path d="M 456 172 q 22 18 44 0 q 22 -18 44 0" stroke="rgba(255,140,165,.55)" stroke-width="2.6" fill="none" stroke-linecap="round"/>
+                <path d="M 452 358 q 24 -20 48 0 q 24 20 48 0" stroke="rgba(127,227,255,.55)" stroke-width="2.6" fill="none" stroke-linecap="round"/>
+                <path d="M 456 392 q 22 18 44 0 q 22 -18 44 0" stroke="rgba(255,140,165,.55)" stroke-width="2.6" fill="none" stroke-linecap="round"/>
               </g>
 
               <text x="500" y="505" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="13" fill="rgba(255,255,255,.4)">Nguyên phân — 1 tế bào mẹ (2n) → 2 tế bào con (2n) giống hệt mẹ</text>
