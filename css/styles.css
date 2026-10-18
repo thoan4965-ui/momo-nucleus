@@ -912,3 +912,17 @@
     .struct-panel.open{transform:translateY(0);}
   }
   .footer-credits{font-family:var(--font-mono);font-size:11px;color:rgba(255,255,255,.35);margin-top:8px;line-height:1.6;}
+
+  /* ===== Hero fix màn hẹp: headline xuống dòng + co chữ (≤700px) ===== */
+  @media (max-width:700px){
+    .hl-line{white-space:normal;}
+    .hl-lg{font-size:clamp(1.6rem,10.5vw,2.6rem);}
+  }
+
+  /* ===== Zoom tổng thể desktop 0.9 (bù dvh để hero phủ đủ đáy màn) ===== */
+  @media (min-width:901px){
+    html{zoom:.9;}
+    .hero-section{height:calc(100dvh / .9);}
+    .fn-section{min-height:calc(100dvh / .9);}
+    .ai-section{min-height:calc(100dvh / .9);}
+  }
