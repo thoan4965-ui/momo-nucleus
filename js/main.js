@@ -624,87 +624,117 @@
       });
     });
 
-    var fn2Stage = document.getElementById('fn2Stage');
-    var fn2StageText = document.querySelector('#fn2 .stage-text');
-    var fn2StageChips = document.querySelectorAll('#fn2 .stage-chip');
-    var fn2PlayBtn = document.getElementById('fn2Play');
-    var fn2MotherInner = document.getElementById('fn2MotherInner');
-    var fn2D1Inner = document.getElementById('fn2D1Inner');
-    var fn2D2Inner = document.getElementById('fn2D2Inner');
-    var STAGES = ['Interphase', 'Metaphase', 'Anaphase', 'Telophase'];
-    var fn2CurrentStage = 0;
-    var fn2AutoPlaying = false;
-    var fn2Timer = null;
+    // ===== Sim Lab — Phòng mô phỏng SVG (thay khối mô phỏng cũ) =====
+    var simLab = document.getElementById('simLab');
+    var simTabs = document.querySelectorAll('.sim-tab');
+    var simPhasesWrap = document.getElementById('simPhases');
+    var simPlayBtn = document.getElementById('simPlay');
+    var SIM_PHASES = {
+      thutinh:    [['Giao tử (n)', 0], ['Kết hợp', 1.2], ['Hợp tử (2n)', 3.6]],
+      giamphan:   [['Kì đầu I', 0], ['Tiếp hợp & trao đổi chéo', 0.6], ['Giảm phân II', 1.2], ['4 giao tử (n)', 1.8]],
+      nguyenphan: [['Kì trung gian', 0], ['Kì đầu', 0.6], ['Kì giữa', 1.2], ['Kì sau', 1.8], ['Kì cuối', 2.4]]
+    };
+    var simTimelines = {};
 
-    gsap.set(fn2D1Inner, { opacity: 0, scale: 0.4, xPercent: 0 });
-    gsap.set(fn2D2Inner, { opacity: 0, scale: 0.4, xPercent: 0 });
-
-    function setFn2Stage(n) {
-      if (n === fn2CurrentStage && n !== 0) return;
-      fn2CurrentStage = n;
-      if (fn2Stage) fn2Stage.setAttribute('data-stage', n);
-      if (fn2StageText) fn2StageText.textContent = STAGES[n];
-      fn2StageChips.forEach(function(c, i){ c.classList.toggle('active', i === n); });
-
-      if (n === 0) {
-        gsap.to(fn2MotherInner, { opacity: 1, scale: 1, xPercent: 0, duration: 0.9, ease: 'power2.out', overwrite: 'auto' });
-        gsap.to([fn2D1Inner, fn2D2Inner], { opacity: 0, scale: 0.4, xPercent: 0, duration: 0.6, ease: 'power2.out', overwrite: 'auto' });
-        fn2D1Inner.classList.remove('show-ring');
-        fn2D2Inner.classList.remove('show-ring');
-      } else if (n === 1) {
-        gsap.to(fn2MotherInner, { opacity: 1, scale: 1.12, xPercent: 0, duration: 0.8, ease: 'power2.out', overwrite: 'auto' });
-        gsap.to([fn2D1Inner, fn2D2Inner], { opacity: 0, scale: 0.4, xPercent: 0, duration: 0.5, ease: 'power2.out', overwrite: 'auto' });
-      } else if (n === 2) {
-        gsap.to(fn2MotherInner, { opacity: 0.25, scale: 0.92, duration: 0.9, ease: 'power2.out', overwrite: 'auto' });
-        gsap.to(fn2D1Inner, { opacity: 0.9, scale: 0.85, xPercent: -40, duration: 1.4, ease: 'power3.out', overwrite: 'auto' });
-        gsap.to(fn2D2Inner, { opacity: 0.9, scale: 0.85, xPercent: 40, duration: 1.4, ease: 'power3.out', overwrite: 'auto' });
-        setTimeout(function(){ fn2D1Inner.classList.add('show-ring'); fn2D2Inner.classList.add('show-ring'); }, 400);
-      } else if (n === 3) {
-        gsap.to(fn2MotherInner, { opacity: 0, scale: 0.7, duration: 0.8, ease: 'power2.out', overwrite: 'auto' });
-        gsap.to(fn2D1Inner, { opacity: 1, scale: 1, xPercent: -75, duration: 1.2, ease: 'power3.out', overwrite: 'auto' });
-        gsap.to(fn2D2Inner, { opacity: 1, scale: 1, xPercent: 75, duration: 1.2, ease: 'power3.out', overwrite: 'auto' });
+    function buildSimTimeline(tab){
+      if (simTimelines[tab]) return simTimelines[tab];
+      if (tab === 'thutinh') {
+        var tl = gsap.timeline({ paused: true });
+        tl.addLabel('giao_tu', 0).addLabel('ket_hop', 1.2).addLabel('hop_tu', 3.6);
+        tl.to('.st-male', { x: 270, duration: 1.5, ease: 'power2.inOut' }, 1.2)
+          .to('.st-female', { x: -270, duration: 1.5, ease: 'power2.inOut' }, 1.2)
+          .to('.st-plus', { opacity: 0, duration: 0.4 }, 1.3)
+          .to('.st-zygote', { opacity: 1, duration: 0.9, ease: 'power2.out' }, 3.0)
+          .to('.st-male, .st-female', { opacity: 0, duration: 0.7, ease: 'power2.in' }, 3.4);
+        simTimelines[tab] = tl;
       }
+      return simTimelines[tab];
     }
 
-    function playFn2Division() {
-      if (fn2Timer) { clearTimeout(fn2Timer); fn2Timer = null; }
-      fn2AutoPlaying = true;
-      if (fn2PlayBtn) fn2PlayBtn.classList.add('playing');
-      setFn2Stage(0);
-      var delays = [1400, 1600, 2000, 2600];
-      var i = 1;
-      function step() {
-        if (i >= STAGES.length) {
-          fn2Timer = setTimeout(function(){
-            setFn2Stage(0); i = 1;
-            fn2Timer = setTimeout(step, delays[0]);
-          }, 2600);
-          return;
-        }
-        setFn2Stage(i);
-        fn2Timer = setTimeout(function(){ i++; step(); }, delays[i]);
-      }
-      fn2Timer = setTimeout(step, delays[0]);
-    }
-
-    if (fn2PlayBtn) fn2PlayBtn.addEventListener('click', playFn2Division);
-
-    fn2StageChips.forEach(function(chip){
-      chip.addEventListener('click', function(){
-        if (fn2Timer) { clearTimeout(fn2Timer); fn2Timer = null; }
-        fn2AutoPlaying = false;
-        if (fn2PlayBtn) fn2PlayBtn.classList.remove('playing');
-        setFn2Stage(parseInt(chip.dataset.stage, 10));
+    function renderSimPhases(tab){
+      if (!simPhasesWrap) return;
+      var ph = SIM_PHASES[tab] || [];
+      simPhasesWrap.innerHTML = ph.map(function(p, i){
+        return '<button class="fn-chip sim-phase' + (i === 0 ? ' active' : '') + '" data-t="' + p[1] + '">' + p[0] + '</button>';
+      }).join('');
+      Array.prototype.slice.call(simPhasesWrap.querySelectorAll('.sim-phase')).forEach(function(chip){
+        chip.addEventListener('click', function(){
+          simPhasesWrap.querySelectorAll('.sim-phase').forEach(function(c){ c.classList.remove('active'); });
+          chip.classList.add('active');
+          var tl = simTimelines[simLab.dataset.tab];
+          if (tl) { tl.pause(); tl.seek(parseFloat(chip.dataset.t)); }
+          if (simPlayBtn) simPlayBtn.classList.remove('playing');
+        });
       });
+    }
+
+    function setSimTab(tab){
+      if (!simLab) return;
+      simLab.setAttribute('data-tab', tab);
+      simTabs.forEach(function(t){
+        var on = t.dataset.tab === tab;
+        t.classList.toggle('active', on);
+        t.setAttribute('aria-selected', on ? 'true' : 'false');
+      });
+      renderSimPhases(tab);
+      var tl = buildSimTimeline(tab);
+      if (tl) { tl.pause(); tl.seek(0); }
+      if (simPlayBtn) simPlayBtn.classList.remove('playing');
+    }
+
+    simTabs.forEach(function(t){
+      t.addEventListener('click', function(){ setSimTab(t.dataset.tab); });
     });
 
-    if (typeof ScrollTrigger !== 'undefined' && fn2Stage) {
-      ScrollTrigger.create({ trigger: fn2Stage, start: 'top 60%', once: true,
-        onEnter: function(){ setTimeout(playFn2Division, 400); }
-      });
-    } else {
-      setTimeout(playFn2Division, 3000);
+    if (simPlayBtn) simPlayBtn.addEventListener('click', function(){
+      var tl = buildSimTimeline(simLab.dataset.tab);
+      if (!tl) return;
+      simPlayBtn.classList.add('playing');
+      if (tl.progress() >= 1) { tl.restart(); } else { tl.play(); }
+      tl.eventCallback('onComplete', function(){ simPlayBtn.classList.remove('playing'); });
+    });
+
+    if (simLab) setSimTab('thutinh');
+
+    if (typeof ScrollTrigger !== 'undefined' && simLab) {
+      ScrollTrigger.create({ trigger: simLab, start: 'top 60%', once: true,
+        onEnter: function(){ setTimeout(function(){ if (simPlayBtn) simPlayBtn.click(); }, 400); } });
     }
+
+    // QA/debug: ?sim=1 vuot entry (khong chay ink/intro) + nhay toi phong mo phong; ?simseek=3.6 seek
+    (function(){
+      if (!/[?&]sim(=|lab)/.test(window.location.search)) return;
+      window.addEventListener('load', function(){
+        setTimeout(function(){
+          try {
+            var es = document.getElementById('entryScreen');
+            if (es) es.style.display = 'none';
+            ['inkBase','inkRing1','inkRing2','inkRing3','inkScanline','inkSpores'].forEach(function(id){
+              var el = document.getElementById(id); if (el) el.style.display = 'none';
+            });
+            var fn2 = document.getElementById('fn2');
+            if (fn2) {
+              Array.prototype.forEach.call(fn2.querySelectorAll('*'), function(el){
+                el.style.opacity = ''; el.style.transform = ''; el.style.visibility = '';
+              });
+              if (!/[?&]noscroll/.test(window.location.search)) {
+                var html = document.documentElement;
+                var prev = html.style.scrollBehavior;
+                html.style.scrollBehavior = 'auto';
+                window.scrollTo(0, fn2.offsetTop);
+                html.style.scrollBehavior = prev;
+              }
+            }
+            var ms = window.location.search.match(/[?&]simseek=([\d.]+)/);
+            if (ms) {
+              var tl = simTimelines['thutinh'];
+              if (tl) { tl.pause(); tl.seek(parseFloat(ms[1])); }
+              if (simPlayBtn) simPlayBtn.classList.remove('playing');
+            }
+          } catch (e) { console.error('[sim QA]', e); }
+        }, 1200);
+      });
+    })();
 
     // ============================================================
     // AI CHAT LOGIC (100+ Q&A DATABASE & SCORING ALGORITHM)

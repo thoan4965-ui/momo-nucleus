@@ -655,23 +655,9 @@
   .fn-feature-hint{text-align:center;font-family:var(--font-mono);font-size:12px;letter-spacing:.06em;line-height:1.6;color:rgba(255,255,255,.5);min-height:3.2em;transition:opacity .3s;padding:0 10px;max-width:480px;margin:0 auto;}
   .fn-feature-hint em{color:var(--fn1);font-style:normal;font-weight:600;}
 
-  .fn-division-stage{position:relative;}
-  .fn-stage-indicator{position:absolute;top:0;left:50%;transform:translateX(-50%);display:flex;align-items:center;gap:8px;padding:6px 12px;border-radius:999px;background:rgba(8,15,30,.85);border:1px solid rgba(184,138,255,.4);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);font-family:var(--font-mono);font-size:12px;letter-spacing:.14em;color:#fff;z-index:15;box-shadow:0 8px 24px -8px rgba(184,138,255,.4);}
-  .stage-dot{width:6px;height:6px;border-radius:50%;background:var(--fn2);box-shadow:0 0 10px var(--fn2);animation:badgePulse 1.4s ease-in-out infinite;}
 
-  .fn-cell-wrap{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none;}
-  .fn-mother-inner{width:100%;height:100%;position:relative;pointer-events:auto;}
-  .fn-daughter-inner{width:60%;height:60%;position:relative;pointer-events:auto;opacity:0;}
-  .fn-daughter-inner .fn-3d-model{filter:drop-shadow(0 30px 60px rgba(0,0,0,.7)) drop-shadow(0 0 40px rgba(184,138,255,.25));}
 
-  .dcell-ring{position:absolute;inset:-18%;border-radius:50%;border:2px dashed rgba(184,138,255,.35);background:radial-gradient(circle, rgba(184,138,255,.04), transparent 70%);transition:opacity .7s ease, border-color .7s ease, border-style .7s ease, box-shadow .7s ease;opacity:0;pointer-events:none;}
-  .fn-daughter-inner.show-ring .dcell-ring{opacity:1;border-color:rgba(184,138,255,.75);border-style:solid;box-shadow:0 0 40px -8px rgba(184,138,255,.5);}
-  .dcell-label{position:absolute;bottom:-30px;left:50%;transform:translateX(-50%);padding:4px 10px;border-radius:6px;font-family:var(--font-mono);font-size:12px;letter-spacing:.14em;color:rgba(184,138,255,.9);white-space:nowrap;background:rgba(8,15,30,.9);border:1px solid rgba(184,138,255,.4);opacity:0;transition:opacity .6s ease .2s;}
-  .fn-daughter-inner.show-ring .dcell-label{opacity:1;}
 
-  .fn-flow-svg{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:3;opacity:0;transition:opacity .8s ease;}
-  .fn-division-stage[data-stage="2"] .fn-flow-svg,
-  .fn-division-stage[data-stage="3"] .fn-flow-svg{opacity:1;}
 
   .fn-play-btn{display:flex;align-items:center;justify-content:center;gap:8px;margin:20px auto 0;padding:10px 20px;border-radius:999px;background:rgba(184,138,255,.08);border:1px solid rgba(184,138,255,.4);font-family:var(--font-body);font-size:12px;font-weight:600;letter-spacing:.12em;color:var(--fn2);cursor:pointer;transition:all .3s ease;-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);}
   .fn-play-btn:hover{background:rgba(184,138,255,.15);color:#fff;transform:translateY(-2px);box-shadow:0 8px 24px -6px rgba(184,138,255,.4);}
@@ -926,3 +912,18 @@
     .fn-section{min-height:calc(100dvh / .9);}
     .ai-section{min-height:calc(100dvh / .9);}
   }
+
+  /* ===== Sim Lab — Phòng mô phỏng SVG ===== */
+  .sim-lab{position:relative;display:flex;flex-direction:column;gap:16px;width:100%;}
+  .sim-tabs{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;}
+  .sim-tab{border:1px solid rgba(127,227,255,.25);background:rgba(127,227,255,.06);color:rgba(255,255,255,.75);font-family:var(--font-body);font-size:13px;font-weight:600;letter-spacing:.04em;padding:9px 20px;border-radius:999px;cursor:pointer;transition:all .3s ease;}
+  .sim-tab:hover{border-color:var(--accent);color:#fff;}
+  .sim-tab.active{background:var(--accent);color:#04120f;border-color:var(--accent);box-shadow:0 0 24px -6px var(--accent);}
+  .sim-stage{position:relative;width:100%;}
+  .sim-scene{display:none;width:100%;height:auto;}
+  .sim-lab[data-tab="thutinh"] #sceneThuTinh{display:block;}
+  .sim-lab[data-tab="giamphan"] #sceneGiamPhan{display:block;}
+  .sim-lab[data-tab="nguyenphan"] #sceneNguyenPhan{display:block;}
+  .sim-phases{justify-content:center;}
+  .sim-lab .fn-play-btn{align-self:center;}
+  .st-zygote{opacity:0;}
