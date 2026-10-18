@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Nucleus — Human Chromosome</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+
+  <!-- ========== SVG SPRITE FOR BIOLOGY ICONS ========== -->
+  <svg style="display:none;" xmlns="http://www.w3.org/2000/svg">
+    <symbol id="icon-dna" viewBox="0 0 24 24">
+      <path d="M7 3 Q12 8 7 13 Q2 18 7 23" />
+      <path d="M17 3 Q12 8 17 13 Q22 18 17 23" />
+      <line x1="8" y1="7" x2="16" y2="7" />
+      <line x1="8" y1="11" x2="16" y2="11" />
+      <line x1="8" y1="15" x2="16" y2="15" />
+      <line x1="8" y1="19" x2="16" y2="19" />
+    </symbol>
+    <symbol id="icon-microscope" viewBox="0 0 24 24">
+      <path d="M6 20h12" />
+      <path d="M9 20v-4" />
+      <path d="M15 16l-2-6-4 2 2 4z" />
+      <path d="M13 10l2-6" />
+      <path d="M15 4l2 2" />
+      <path d="M12 20v-2c0-2-2-4-4-4" />
+    </symbol>
+    <symbol id="icon-atom" viewBox="0 0 24 24">
+      <ellipse cx="12" cy="12" rx="10" ry="4" />
+      <ellipse cx="12" cy="12" rx="10" ry="4" transform="rotate(60 12 12)" />
+      <ellipse cx="12" cy="12" rx="10" ry="4" transform="rotate(120 12 12)" />
+      <circle cx="12" cy="12" r="1.5" />
+    </symbol>
+    <symbol id="icon-cell" viewBox="0 0 24 24">
+      <polygon points="12,2 22,7 22,17 12,22 2,17 2,7" />
+      <circle cx="12" cy="12" r="3" />
+    </symbol>
+    <symbol id="icon-plant" viewBox="0 0 24 24">
+      <path d="M8 22h8v-6H8z" />
+      <path d="M12 16v-6" />
+      <path d="M12 10c0-3 2-5 5-5-1 4-3 5-5 5z" />
+      <path d="M12 12c0-3-2-5-5-5 1 4 3 5 5 5z" />
+    </symbol>
+    <symbol id="icon-test-tube" viewBox="0 0 24 24">
+      <path d="M9 2h6" />
+      <path d="M10 2v16a2 2 0 0 0 4 0V2" />
+      <line x1="10" y1="12" x2="14" y2="12" />
+    </symbol>
+    <symbol id="icon-molecule" viewBox="0 0 24 24">
+      <circle cx="6" cy="18" r="2.5" />
+      <circle cx="18" cy="18" r="2.5" />
+      <circle cx="12" cy="6" r="2.5" />
+      <line x1="8" y1="16.5" x2="11" y2="8" />
+      <line x1="16" y1="16.5" x2="13" y2="8" />
+      <line x1="8.5" y1="18" x2="15.5" y2="18" />
+    </symbol>
+    <symbol id="icon-petri-dish" viewBox="0 0 24 24">
+      <circle cx="10" cy="12" r="8" />
+      <path d="M16 18l4 4" />
+      <path d="M8 9a2 2 0 0 1 3 0" />
+      <path d="M11 13a2 2 0 0 1 3 0" />
+    </symbol>
+  </svg>
+
+  <!-- ========== INK REVEAL V2 — MULTI-LAYER ========== -->
+  <svg width="0" height="0" style="position: absolute; pointer-events: none;">
+    <defs>
+      <filter id="inkNoise" x="-20%" y="-20%" width="140%" height="140%">
+        <feTurbulence type="fractalNoise" baseFrequency="0.018" numOctaves="4" seed="7" result="noise"/>
+        <feDisplacementMap in="SourceGraphic" in2="noise" scale="42" xChannelSelector="R" yChannelSelector="G"/>
+      </filter>
+      <mask id="revealMask" maskUnits="userSpaceOnUse" x="0" y="0" width="100%" height="100%">
+        <rect width="100%" height="100%" fill="white" />
+        <g filter="url(#inkNoise)">
+          <circle id="inkCircle"  cx="50%" cy="50%" r="0" fill="black"/>
+          <circle id="inkCircle2" cx="30%" cy="40%" r="0" fill="black"/>
+          <circle id="inkCircle3" cx="70%" cy="60%" r="0" fill="black"/>
+        </g>
+      </mask>
+    </defs>
+  </svg>
+
+  <div class="ink-reveal ink-base" id="inkBase"></div>
+  <div class="ink-ring ink-ring-1" id="inkRing1"></div>
+  <div class="ink-ring ink-ring-2" id="inkRing2"></div>
+  <div class="ink-ring ink-ring-3" id="inkRing3"></div>
+  <div class="ink-scanline" id="inkScanline"></div>
+  <div class="ink-spores" id="inkSpores"></div>
+
+  <!-- MÀN HÌNH CHỜ -->
+  <div class="entry-screen" id="entryScreen">
+    <!-- LỚP ICON BAY LƠ LỬNG -->
+    <div class="entry-icons-layer" id="entryIconsLayer"></div>
+    
+    <div class="entry-inner">
+      <h1 class="entry-title">Nucleus<span>.</span></h1>
+      <p class="entry-sub">Human Chromosome Visualizer</p>
+      <div class="entry-loader" id="entryLoader">Preparing 3D Model...</div>
+      
+      <!-- HÀNH ĐỘNG: NÚT ENTER VÀ NÚT FULLSCREEN -->
+      <div class="entry-actions">
+        <button class="fs-btn" id="fsBtn" type="button" aria-label="Enter fullscreen" title="Toàn màn hình (F)">
+          <svg class="fs-icon-enter" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/>
+          </svg>
+          <svg class="fs-icon-exit" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M9 4v5H4M15 4v5h5M9 20v-5H4M15 20v-5h5"/>
+          </svg>
+        </button>
+        <button id="enterBtn" class="entry-btn" disabled>ENTER</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="grain"></div>
+  <div class="chromatic-edge"></div>
+
+  <section class="hero-section" id="hero">
+    <div class="bg-bio-icons" id="heroBioIcons"></div>
+
+    <div class="bg one"></div>
+    <div class="bg two"></div>
+    <div class="grid-bg"></div>
+    <div class="halo"></div>
+    <div class="vignette"></div>
+
+    <div class="content-left" id="contentLeft">
+      <div class="badge"><span class="badge-dot"></span> Hình 7.2 · NST kép tương đồng</div>
+      <h1 class="headline" id="headline" aria-label="Human Chromosome">
+        <span class="hl-line hl-sm">Human</span>
+        <span class="hl-line hl-lg">Chromosome</span>
+      </h1>
+      <p class="lede">Cặp NST kép tương đồng mang các <b>locus gene</b> tương ứng. Khám phá <b>cấu trúc</b> và <b>chức năng</b> của nhiễm sắc thể.</p>
+
+      <div class="mode-bar" id="modeBar">
+        <div class="mode-bar-label">Cấu trúc NST</div>
+        <div class="mode-bar-row">
+          <button class="mode-btn active" type="button" data-mode="off"><span class="mode-btn-dot"></span> Khám phá</button>
+          <button class="mode-btn" type="button" data-mode="sister"><span class="mode-btn-dot"></span> Chromatid chị em</button>
+          <button class="mode-btn" type="button" data-mode="centromere"><span class="mode-btn-dot"></span> Tâm động</button>
+        </div>
+        <div class="mode-bar-label" style="margin-top:8px;">Chức năng NST</div>
+        <div class="mode-bar-row">
+          <button class="mode-btn" type="button" data-mode="carry"><span class="mode-btn-dot"></span> Mang thông tin di truyền</button>
+          <button class="mode-btn" type="button" data-mode="transmit"><span class="mode-btn-dot"></span> Truyền đạt thông tin</button>
+        </div>
+      </div>
+
+      <div class="locus-legend" id="locusLegend">
+        <div class="locus-legend-title">Các locus trên NST</div>
+        <div class="locus-item" data-locus="A"><span class="locus-key">A</span><span class="locus-meta"><span class="locus-name">Locus A</span><span class="locus-desc">Cánh trên · allele A / a</span></span><span class="locus-alleles"><span class="allele-chip">A</span><span class="allele-chip">a</span></span></div>
+        <div class="locus-item" data-locus="B"><span class="locus-key">B</span><span class="locus-meta"><span class="locus-name">Locus B</span><span class="locus-desc">Gần tâm động · allele B / b</span></span><span class="locus-alleles"><span class="allele-chip">B</span><span class="allele-chip">b</span></span></div>
+        <div class="locus-item" data-locus="D"><span class="locus-key">D</span><span class="locus-meta"><span class="locus-name">Locus D</span><span class="locus-desc">Cánh dưới · allele D / d</span></span><span class="locus-alleles"><span class="allele-chip">D</span><span class="allele-chip">d</span></span></div>
+      </div>
+
+      <div class="switcher" role="tablist" aria-label="Phase">
+        <span class="sw-pill"></span>
+        <button class="sw active" type="button" role="tab" data-flavor="interphase" aria-selected="true">Interphase</button>
+        <button class="sw" type="button" role="tab" data-flavor="metaphase" aria-selected="false">Metaphase</button>
+      </div>
+    </div>
+
+    <div class="model-anchor" id="modelAnchor">
+      <div class="hud-rings" aria-hidden="true">
+        <svg viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
+          <g class="ring-out"><circle cx="200" cy="200" r="185" fill="none" stroke="rgba(127,227,255,.18)" stroke-width="1" stroke-dasharray="2 12"/></g>
+          <g class="ring-mid"><circle cx="200" cy="200" r="152" fill="none" stroke="rgba(127,227,255,.22)" stroke-width="1" stroke-dasharray="40 18 4 18"/></g>
+          <g class="ring-in"><circle cx="200" cy="200" r="120" fill="none" stroke="rgba(127,227,255,.14)" stroke-width="1" stroke-dasharray="1 6"/><circle cx="200" cy="80" r="2.5" fill="#7fe3ff" opacity=".8"/></g>
+        </svg>
+      </div>
+      <div class="hud-bracket tl"></div><div class="hud-bracket tr"></div><div class="hud-bracket bl"></div><div class="hud-bracket br"></div>
+      <div class="hud-live"><span class="hud-live-dot"></span> Live Render</div>
+
+      <div class="telemetry">
+        <div class="tele-row"><span class="tele-label">θ</span><span class="tele-val" id="teleTheta">-25.0°</span><div class="tele-bar" style="--w:50%"></div></div>
+        <div class="tele-row"><span class="tele-label">φ</span><span class="tele-val" id="telePhi">75.0°</span><div class="tele-bar" style="--w:60%"></div></div>
+        <div class="tele-row"><span class="tele-label">R</span><span class="tele-val" id="teleR">2.4m</span><div class="tele-bar" style="--w:40%"></div></div>
+      </div>
+
+      <div class="sound-bars" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span></div>
+      <div class="hud-scan-v"></div>
+      <div class="ground-shadow" id="groundShadow"></div>
+      <div class="ground-shadow-inner" id="groundShadowInner"></div>
+      <div class="particles-layer" id="particles"></div>
+      <div class="glow-boost"></div>
+
+      <div class="overlay overlay-sister" id="overlaySister" aria-hidden="true">
+        <div class="sister-tube sister-left"></div><div class="sister-tube sister-right"></div>
+        <div class="overlay-chip sister-chip-left">Chromatid 1</div><div class="overlay-chip sister-chip-right">Chromatid 2</div>
+        <div class="sister-joint"><span>Dính ở tâm động</span></div>
+      </div>
+      <div class="overlay overlay-centromere" id="overlayCentromere" aria-hidden="true">
+        <div class="centro-ring"></div><div class="centro-ring centro-ring-2"></div>
+        <div class="centro-pulse"></div><div class="centro-pulse delay"></div>
+        <div class="overlay-chip centro-chip">Tâm động · centromere</div>
+      </div>
+      <div class="overlay carry-overlay" id="overlayCarry" aria-hidden="true">
+        <div class="gene-strip strip-1"></div><div class="gene-strip strip-2"></div><div class="gene-strip strip-3"></div>
+        <div class="carry-badge badge-gene">◈ Gene</div><div class="carry-badge badge-allele">◇ Allele</div>
+        <div class="carry-badge badge-telo">▲ Đầu mút</div><div class="carry-badge badge-centro">● Tâm động</div>
+      </div>
+      <div class="overlay transmit-overlay" id="overlayTransmit" aria-hidden="true">
+        <div class="daughter-cell cell-left"></div><div class="daughter-cell cell-right"></div>
+        <div class="transmit-arrow arrow-left"></div><div class="transmit-arrow arrow-right"></div>
+        <div class="transmit-node node-1">2n</div><div class="transmit-node node-2">2n</div>
+        <div class="transmit-label label-1">Tế bào con 1</div><div class="transmit-label label-2">Tế bào con 2</div>
+        <div class="transmit-info">Nguyên phân · truyền nguyên vẹn</div>
+      </div>
+
+      <div class="sway-1" id="sway1"><div class="sway-2" id="sway2"><div class="float-el" id="floatEl">
+        <div class="model-wrap" id="modelWrap">
+          <svg class="fallback" viewBox="0 0 400 480" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <defs>
+              <filter id="bigGlow" x="-80%" y="-80%" width="260%" height="260%"><feGaussianBlur stdDeviation="18"/></filter>
+              <filter id="softGlow" x="-70%" y="-70%" width="240%" height="240%"><feGaussianBlur stdDeviation="2.6"/></filter>
+              <filter id="coilGlow" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="0.9"/></filter>
+              <linearGradient id="glassBody" gradientUnits="userSpaceOnUse" x1="60" y1="20" x2="350" y2="460">
+                <stop class="gs1" offset="0" stop-opacity="0.72"/><stop class="gs2" offset="0.5" stop-opacity="0.34"/><stop class="gs3" offset="1" stop-opacity="0.70"/>
+              </linearGradient>
+              <linearGradient id="sheen" gradientUnits="userSpaceOnUse" x1="80" y1="0" x2="350" y2="470">
+                <stop offset="0" stop-color="#ffffff" stop-opacity="0.24"/><stop offset="0.30" stop-color="#ffffff" stop-opacity="0.03"/><stop offset="0.62" stop-color="#000000" stop-opacity="0.10"/><stop offset="1" stop-color="#000814" stop-opacity="0.44"/>
+              </linearGradient>
+              <radialGradient id="coreGrad" cx="0.42" cy="0.35" r="0.75"><stop offset="0" stop-color="#0a1630" stop-opacity="0.55"/><stop offset="1" stop-color="#02040c" stop-opacity="0.85"/></radialGradient>
+            </defs>
+            <g id="chromosome">
+              <g id="glowLayer"></g><g id="bodyLayer"></g><g id="coreLayer"></g>
+              <g id="coilLayer"></g>
+              <g id="sheenLayer"></g><g id="rimLayer"></g>
+            </g>
+            <g id="armData" fill="none" stroke="none">
+              <path d="M 158 218 C 150 172 152 108 196 40"/>
+              <path d="M 158 218 C 212 188 288 136 356 84"/>
+              <path d="M 158 218 C 134 264 102 336 52 402"/>
+              <path d="M 158 218 C 168 268 180 356 190 452"/>
+            </g>
+          </svg>
+
+          <div class="chromo-3d rotate-viewer active" id="mvInterphase" role="img" aria-label="Interphase chromosome"
+            data-sheet="assets/baked/interphase.webp" data-sheet-2x="assets/baked/interphase@2x.webp"
+            data-frames="48" data-cols="12" data-start-theta="-25" data-keys="1"></div>
+
+          <div class="chromo-3d rotate-viewer" id="mvMetaphase" role="img" aria-label="Metaphase chromosome"
+            data-sheet="assets/baked/metaphase.webp" data-sheet-2x="assets/baked/metaphase@2x.webp"
+            data-frames="48" data-cols="12" data-start-theta="-25"></div>
+
+          <span class="loader" id="loader">Loading model…</span>
+          <div class="model-shine" id="modelShine"></div>
+        </div>
+      </div></div></div>
+
+      <div class="locus-layer" id="locusLayer">
+        <div class="locus-marker" data-locus="A" data-base-x="38" data-base-y="26" id="markerA">
+          <svg class="locus-line" width="0" height="0"><line x1="0" y1="0" x2="0" y2="0"/></svg>
+          <div class="locus-dot"></div>
+          <div class="allele-badge"><span class="allele-chip">A</span><span class="allele-chip">a</span></div>
+          <div class="locus-tag"><span class="locus-tag-key">A</span><span class="locus-tag-name">Locus A</span></div>
+        </div>
+        <div class="locus-marker" data-locus="B" data-base-x="42" data-base-y="50" id="markerB">
+          <svg class="locus-line" width="0" height="0"><line x1="0" y1="0" x2="0" y2="0"/></svg>
+          <div class="locus-dot"></div>
+          <div class="allele-badge"><span class="allele-chip">B</span><span class="allele-chip">b</span></div>
+          <div class="locus-tag"><span class="locus-tag-key">B</span><span class="locus-tag-name">Locus B</span></div>
+        </div>
+        <div class="locus-marker" data-locus="D" data-base-x="38" data-base-y="76" id="markerD">
+          <svg class="locus-line" width="0" height="0"><line x1="0" y1="0" x2="0" y2="0"/></svg>
+          <div class="locus-dot"></div>
+          <div class="allele-badge"><span class="allele-chip">D</span><span class="allele-chip">d</span></div>
+          <div class="locus-tag"><span class="locus-tag-key">D</span><span class="locus-tag-name">Locus D</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="info-panel" id="infoPanel" data-locus="A">
+      <button class="info-close" id="infoClose" aria-label="Đóng">×</button>
+      <div class="info-header">
+        <span class="info-key" id="infoKey">A</span>
+        <div class="info-title">
+          <span class="info-title-name" id="infoName">Locus A</span>
+          <span class="info-title-pos" id="infoPos">Cánh trên NST</span>
+        </div>
+      </div>
+      <div class="info-alleles" id="infoAllelesRow">
+        <span class="info-alleles-label" id="alleleLabel">Cặp allele</span>
+        <span class="allele-chip" id="allele1">A</span>
+        <span class="allele-chip" id="allele2">a</span>
+      </div>
+      <div class="info-scroll">
+        <p class="info-desc" id="infoDesc"></p>
+        <ul class="info-bullets" id="infoBullets"></ul>
+        <div id="infoFnSections"></div>
+      </div>
+    </div>
+
+    <div class="bottom">
+      <div class="stats">
+        <div class="stat"><span class="num" data-count="46">0</span><span class="unit">chromosomes</span></div>
+        <div class="stat"><span class="num" data-count="3">0</span><span class="unit">billion bp</span></div>
+        <div class="stat"><span class="num" data-count="2">0</span><span class="unit">functions</span></div>
+      </div>
+      <div class="bottom-status"><span class="dot"></span> Hình 7.2 · Sinh học 12</div>
+    </div>
+
+    <div class="scroll-hint" aria-hidden="true">
+      <span>Scroll</span>
+      <svg viewBox="0 0 24 24" width="16" height="16"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+    </div>
+  </section>
+
+  <header class="nav" id="mainNav">
+    <a class="logo" href="#hero" data-target="#hero">Nucleus<span>.</span></a>
+    <nav class="links">
+      <a href="#hero" data-target="#hero">Tổng quan</a>
+      <a href="#fn1" data-target="#fn1">Chức năng 1</a>
+      <a href="#fn2" data-target="#fn2">Chức năng 2</a>
+      <a href="#ai" data-target="#ai">Hỏi đáp AI</a>
+    </nav>
+    <button class="buy" type="button" data-magnetic data-target="#ai">Ask AI</button>
+  </header>
+
+  <div class="model-tip" id="modelTip" aria-hidden="true"><span class="model-tip-dot"></span><span>Drag to explore</span></div>
+
+  <section class="fn-section" id="fn1">
+    <div class="fn-bio-icons" id="fn1BioIcons"></div>
+    <div class="fn-bg fn-bg-1"></div>
+    <div class="fn-num-deco">01</div>
+
+    <div class="fn-inner">
+      <div class="fn-visual-wrap fn-visual-wrap-3d">
+        <div class="fn-3d-stage" id="fn1Stage">
+          <div class="fn-3d-rings"><span class="ring"></span><span class="ring ring-2"></span><span class="ring ring-3"></span></div>
+          <div class="fn-scan-ring"></div>
+
+          <div class="fn-3d-model rotate-viewer" id="fn1Model" role="img" aria-label="3D chromosome - gene carrier"
+            data-sheet="assets/baked/interphase.webp" data-sheet-2x="assets/baked/interphase@2x.webp"
+            data-frames="48" data-cols="12" data-start-theta="-25" data-rotate="10"></div>
+
+          <div class="fn1-visuals" id="fn1Visuals">
+            <div class="vis-item vis-gene active" id="visGene"></div>
+            <div class="vis-item vis-locus" id="visLocus"></div>
+            <div class="vis-item vis-allele" id="visAllele"></div>
+            <div class="vis-item vis-centromere" id="visCentromere"></div>
+            <div class="vis-item vis-telomere" id="visTelomere"></div>
+          </div>
+
+          <div class="fn-hotspot" data-gene="A" style="top:28%;left:48%"><span class="hs-dot"></span><span class="hs-label">Gene A</span></div>
+          <div class="fn-hotspot" data-gene="B" style="top:50%;left:44%"><span class="hs-dot"></span><span class="hs-label">Gene B</span></div>
+          <div class="fn-hotspot" data-gene="D" style="top:72%;left:46%"><span class="hs-dot"></span><span class="hs-label">Gene D</span></div>
+
+          <div class="fn-float-badge" style="top:15%;left:20%;animation-delay:0s">DNA</div>
+          <div class="fn-float-badge" style="top:32%;right:15%;animation-delay:-2s">A</div>
+          <div class="fn-float-badge" style="bottom:22%;left:18%;animation-delay:-1s">T</div>
+          <div class="fn-float-badge" style="bottom:12%;right:22%;animation-delay:-3s">G</div>
+        </div>
+
+        <div class="fn-chips" id="fn1Chips">
+          <button class="fn-chip active" data-feature="gene">Gene</button>
+          <button class="fn-chip" data-feature="locus">Locus</button>
+          <button class="fn-chip" data-feature="allele">Allele</button>
+          <button class="fn-chip" data-feature="centromere">Centromere</button>
+          <button class="fn-chip" data-feature="telomere">Telomere</button>
+        </div>
+
+        <div class="fn-feature-hint" id="fn1Hint">Chọn một thành phần để khám phá</div>
+      </div>
+
+      <div class="fn-content">
+        <div class="fn-badge"><span class="fn-badge-dot"></span> Chức năng 01 · NST</div>
+        <h2 class="fn-heading fn-heading-words" id="fn1Heading">
+          <span class="line"><span class="word">Mang</span></span>
+          <span class="line"><span class="word">thông</span> <span class="word">tin</span></span>
+          <span class="line"><span class="word accent">di</span> <span class="word accent">truyền</span></span>
+        </h2>
+        <p class="fn-lede">Nhiễm sắc thể là <b>vật chất mang thông tin di truyền</b> của tế bào — nơi lưu trữ toàn bộ bản thiết kế của sinh vật dưới dạng các gene nằm kế tiếp nhau dọc theo chiều dài DNA.</p>
+
+        <div class="fn-points">
+          <div class="fn-point tilt"><div class="fn-point-num">01</div><div><div class="fn-point-title">Gene và locus</div><div class="fn-point-body">Các gene nằm kế tiếp nhau dọc theo DNA; vị trí của gene trên NST gọi là <b>locus</b>. Mỗi locus trên cặp NST tương đồng có thể chứa các trình tự nucleotide khác nhau — gọi là <b>allele</b>.</div></div></div>
+          <div class="fn-point tilt"><div class="fn-point-num">02</div><div><div class="fn-point-title">Số lượng và phân bố gene</div><div class="fn-point-body">Số lượng gene và sự phân bố của gene trên các NST của cùng một bộ NST <b>rất khác nhau</b>. Có NST chứa nhiều gene phân bố dày đặc; NST khác lại chứa ít gene hơn.</div></div></div>
+          <div class="fn-point tilt"><div class="fn-point-num">03</div><div><div class="fn-point-title">Trình tự đặc biệt</div><div class="fn-point-body">Ngoài gene, NST còn có các <b>trình tự nucleotide đặc biệt</b>: vùng đầu mút bảo vệ NST và trình tự tâm động giúp NST di chuyển được khi phân chia tế bào.</div></div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="fn-section" id="fn2">
+    <div class="fn-bio-icons" id="fn2BioIcons"></div>
+    <div class="fn-bg fn-bg-2"></div>
+    <div class="fn-num-deco">02</div>
+
+    <div class="fn-inner">
+      <div class="fn-content">
+        <div class="fn-badge"><span class="fn-badge-dot"></span> Chức năng 02 · NST</div>
+        <h2 class="fn-heading fn-heading-chars" id="fn2Heading">
+          <span class="line" data-text="Truyền"></span>
+          <span class="line" data-text="đạt"></span>
+          <span class="line" data-text="thông" data-accent="1"></span>
+          <span class="line" data-text="tin" data-accent="1"></span>
+        </h2>
+        <p class="fn-lede">Nhiễm sắc thể truyền đạt thông tin di truyền qua các thế hệ tế bào và thế hệ cơ thể, nhờ sự vận động chính xác trong <b>nguyên phân</b> và <b>giảm phân</b>.</p>
+
+        <div class="fn-points">
+          <div class="fn-point"><div class="fn-point-num">01</div><div><div class="fn-point-title">Nguyên phân</div><div class="fn-point-body">Trong nguyên phân, NST được <b>nhân đôi và phân chia đồng đều</b> về hai tế bào con, nên thông tin di truyền được truyền đạt nguyên vẹn qua các thế hệ tế bào.</div></div></div>
+          <div class="fn-point"><div class="fn-point-num">02</div><div><div class="fn-point-title">Sinh sản sinh dưỡng</div><div class="fn-point-body">Ở sinh vật đơn bào và đa bào có hình thức sinh sản sinh dưỡng, nguyên phân đảm bảo cho các tế bào có <b>bộ NST lưỡng bội như nhau</b>.</div></div></div>
+          <div class="fn-point"><div class="fn-point-num">03</div><div><div class="fn-point-title">Qua các thế hệ cơ thể</div><div class="fn-point-body">Nhờ sự vận động của NST trong nguyên phân và giảm phân, các gene được truyền nguyên vẹn cho đời sau dưới dạng <b>các tổ hợp gene khác nhau</b> — nhờ đó sinh vật thích nghi với điều kiện môi trường khác nhau.</div></div></div>
+        </div>
+      </div>
+
+      <div class="fn-visual-wrap fn-visual-wrap-3d">
+        <div class="fn-3d-stage fn-division-stage" id="fn2Stage" data-stage="0">
+          <div class="fn-stage-indicator">
+            <span class="stage-dot"></span>
+            <span class="stage-text">Interphase</span>
+          </div>
+
+          <div class="fn-cell-wrap" id="fn2MotherWrap">
+            <div class="fn-mother-inner" id="fn2MotherInner">
+              <div class="fn-3d-model rotate-viewer" id="fn2Mother" role="img" aria-label="Mother cell chromosome"
+                data-sheet="assets/baked/metaphase.webp" data-sheet-2x="assets/baked/metaphase@2x.webp"
+                data-frames="48" data-cols="12" data-start-theta="-25" data-rotate="8"></div>
+            </div>
+          </div>
+
+          <div class="fn-cell-wrap" id="fn2D1Wrap">
+            <div class="fn-daughter-inner" id="fn2D1Inner">
+              <div class="dcell-ring"></div>
+              <div class="fn-3d-model rotate-viewer" id="fn2Daughter1" role="img" aria-label="Daughter cell 1"
+                data-sheet="assets/baked/metaphase.webp" data-sheet-2x="assets/baked/metaphase@2x.webp"
+                data-frames="48" data-cols="12" data-start-theta="-15" data-rotate="10"></div>
+              <span class="dcell-label">Tế bào con 1</span>
+            </div>
+          </div>
+
+          <div class="fn-cell-wrap" id="fn2D2Wrap">
+            <div class="fn-daughter-inner" id="fn2D2Inner">
+              <div class="dcell-ring"></div>
+              <div class="fn-3d-model rotate-viewer" id="fn2Daughter2" role="img" aria-label="Daughter cell 2"
+                data-sheet="assets/baked/metaphase.webp" data-sheet-2x="assets/baked/metaphase@2x.webp"
+                data-frames="48" data-cols="12" data-start-theta="-35" data-rotate="10"></div>
+              <span class="dcell-label">Tế bào con 2</span>
+            </div>
+          </div>
+
+          <svg class="fn-flow-svg" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+            <path id="flowPathLeft" d="M 50 50 Q 35 45 20 50" fill="none" stroke="rgba(127,227,255,.55)" stroke-width="0.3" stroke-dasharray="1.5 1.5"/>
+            <path id="flowPathRight" d="M 50 50 Q 65 55 80 50" fill="none" stroke="rgba(127,227,255,.55)" stroke-width="0.3" stroke-dasharray="1.5 1.5"/>
+            <circle r="0.7" fill="#7fe3ff">
+              <animateMotion dur="1.8s" repeatCount="indefinite" begin="0s"><mpath href="#flowPathLeft"/></animateMotion>
+            </circle>
+            <circle r="0.5" fill="#b88aff">
+              <animateMotion dur="1.8s" repeatCount="indefinite" begin="0.6s"><mpath href="#flowPathLeft"/></animateMotion>
+            </circle>
+            <circle r="0.7" fill="#7fe3ff">
+              <animateMotion dur="1.8s" repeatCount="indefinite" begin="0s"><mpath href="#flowPathRight"/></animateMotion>
+            </circle>
+            <circle r="0.5" fill="#b88aff">
+              <animateMotion dur="1.8s" repeatCount="indefinite" begin="0.6s"><mpath href="#flowPathRight"/></animateMotion>
+            </circle>
+          </svg>
+        </div>
+
+        <div class="fn-chips" id="fn2Chips">
+          <button class="fn-chip stage-chip active" data-stage="0">Interphase</button>
+          <button class="fn-chip stage-chip" data-stage="1">Metaphase</button>
+          <button class="fn-chip stage-chip" data-stage="2">Anaphase</button>
+          <button class="fn-chip stage-chip" data-stage="3">Telophase</button>
+        </div>
+
+        <button class="fn-play-btn" id="fn2Play">
+          <svg viewBox="0 0 24 24" width="12" height="12"><polygon points="6,3 20,12 6,21" fill="currentColor"/></svg>
+          Phát mô phỏng phân bào
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       AI EXPANSION SECTION
+       ============================================================ -->
+  <section class="ai-section" id="ai">
+    <div class="fn-bio-icons" id="aiBioIcons"></div>
+    <div class="ai-inner">
+      <div class="ai-header">
+        <div class="ai-badge"><span class="ai-badge-dot"></span> Hỗ trợ bởi DeepSeek</div>
+        <h2 class="fn-heading">Hỏi đáp <span class="accent">AI</span></h2>
+        <p class="fn-lede">Nhập câu hỏi về nhiễm sắc thể, di truyền học hoặc bất kỳ chủ đề sinh học nào. AI sẽ giải đáp cho bạn!</p>
+      </div>
+      
+      <div class="ai-chat-container">
+        <div class="ai-chat-messages" id="aiChatMessages">
+          <div class="chat-message ai-message">
+            <div class="chat-avatar">AI</div>
+            <div class="chat-bubble">Xin chào! Tôi là trợ lý AI DeepSeek. Bạn có thể hỏi tôi về nhiễm sắc thể, nguyên phân, giảm phân, đột biến... hoặc các câu hỏi tư duy. Hãy thử click vào các gợi ý bên dưới nhé!</div>
+          </div>
+        </div>
+        
+        <!-- QUICK PROMPTS -->
+        <div class="ai-prompts" id="aiPrompts">
+          <div class="ai-prompt-chip">Tại sao NST phải co xoắn tối đa trước khi phân bào?</div>
+          <div class="ai-prompt-chip">Sự khác biệt cốt lõi giữa nguyên phân và giảm phân là gì?</div>
+          <div class="ai-prompt-chip">Điều gì xảy ra nếu tâm động không phân chia?</div>
+          <div class="ai-prompt-chip">Tại sao sinh vật sinh sản hữu tính lại đa dạng hơn vô tính?</div>
+          <div class="ai-prompt-chip">Đột biến mất đoạn NST 5 ở người gây bệnh gì?</div>
+        </div>
+
+        <form class="ai-input-area" id="aiForm">
+          <input type="text" id="aiInput" placeholder="Nhập câu hỏi của bạn..." autocomplete="off" />
+          <button type="submit" class="ai-submit" id="aiSubmit">
+            <svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
+          </button>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <a class="logo" href="#hero" data-target="#hero">Nucleus<span>.</span></a>
+        <p>Hình 7.2 — Sinh học 12 · Nhiễm sắc thể</p>
+      </div>
+      <div class="footer-actions">
+        <span class="footer-meta">© 2025 · Educational prototype</span>
+        <button class="back-to-top" id="backToTop" type="button">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M12 19V5M5 12l7-7 7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Về đầu trang
+        </button>
+      </div>
+    </div>
+  </footer>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+  <script src="js/rotate-viewer.js"></script>
+  <script src="js/qa-database.js"></script>
+  <script src="js/qa-score.js"></script>
+  <script src="js/chat.js"></script>
+  <script src="js/main.js"></script>
+
+<script src="js/micro-interactions.js"></script>
+
+<script src="js/fullscreen.js"></script>
+</body>
+</html>

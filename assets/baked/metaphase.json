@@ -1,0 +1,11 @@
+{
+ "frames": 48,
+ "cols": 12,
+ "rows": 4,
+ "cell": 256,
+ "sheet": "metaphase.webp",
+ "cell2x": 512,
+ "sheet2x": "metaphase@2x.webp",
+ "degreesPerFrame": 7.5,
+ "startThetaDeg": -25.0
+}
